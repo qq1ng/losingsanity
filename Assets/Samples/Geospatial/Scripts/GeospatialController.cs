@@ -1021,7 +1021,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         //own stuff
         //TerrainPromiseCoroutine version that gets overloaded with our custom GameObject from AddMyAnchors
-        private IEnumerator CheckTerrainPromise2(ResolveAnchorOnTerrainPromise promise,
+        private IEnumerator CheckTerrainPromise(ResolveAnchorOnTerrainPromise promise,
             GeospatialAnchorHistory history, GameObject ownGO)
         {
             yield return promise;
@@ -1147,7 +1147,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         }
 
         //own stuff
-        private void ReplacePlaneWithAnchor(Vector2 position)
+        private void ReplacePlaneWithAnchor(Vector2 position, GameObject planeToAnchorGO)
         {
             if (_streetscapeGeometryVisibility)
             {
@@ -1175,7 +1175,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
                             // Anchor returned will be null, the coroutine will handle creating
                             // the anchor when the promise is done.
-                            PlaceARAnchor(history, modifiedPose, hitResults[0].trackableId);
+                            PlaceARAnchor(history, planeToAnchorGO, modifiedPose, hitResults[0].trackableId);
                         }
                     }
                     else
@@ -1275,7 +1275,61 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                             history.Latitude, history.Longitude,
                             0, eunRotation);
 
-                    StartCoroutine(CheckTerrainPromise2(terrainPromise, history, planeToInteract));
+                    StartCoroutine(CheckTerrainPromise(terrainPromise, history));
+                    return null;
+
+                case AnchorType.Geospatial:
+                    ARStreetscapeGeometry streetscapegeometry =
+                        StreetscapeGeometryManager.GetStreetscapeGeometry(trackableId);
+                    if (streetscapegeometry != null)
+                    {
+                        anchor = StreetscapeGeometryManager.AttachAnchor(
+                            streetscapegeometry, pose);
+                    }
+
+                    if (anchor != null)
+                    {
+                        _anchorObjects.Add(anchor.gameObject);
+                        _historyCollection.Collection.Add(history);
+                        ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
+                        SaveGeospatialAnchorHistory();
+
+                        SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();
+                    }
+                    else
+                    {
+                        SnackBarText.text = GetDisplayStringForAnchorPlacedFailure();
+                    }
+
+                    break;
+            }
+
+            return anchor;
+        }
+
+        private ARAnchor PlaceARAnchor(GeospatialAnchorHistory history, GameObject planeToAnchorGO, Pose pose = new Pose(),
+            TrackableId trackableId = new TrackableId())
+        {
+            Quaternion eunRotation = CreateRotation(history);
+            ARAnchor anchor = null;
+            switch (history.AnchorType)
+            {
+                case AnchorType.Rooftop:
+                    ResolveAnchorOnRooftopPromise rooftopPromise =
+                        AnchorManager.ResolveAnchorOnRooftopAsync(
+                            history.Latitude, history.Longitude,
+                            0, eunRotation);
+
+                    StartCoroutine(CheckRooftopPromise(rooftopPromise, history));
+                    return null;
+
+                case AnchorType.Terrain:
+                    ResolveAnchorOnTerrainPromise terrainPromise =
+                        AnchorManager.ResolveAnchorOnTerrainAsync(
+                            history.Latitude, history.Longitude,
+                            0, eunRotation);
+
+                    StartCoroutine(CheckTerrainPromise(terrainPromise, history, planeToAnchorGO));
                     return null;
 
                 case AnchorType.Geospatial:
@@ -1374,7 +1428,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                         Latitude, Longitude,
                         0, eunRotation);
 
-                StartCoroutine(CheckTerrainPromise2(promise, history, ownAnchor));
+                StartCoroutine(CheckTerrainPromise(promise, history, ownAnchor));
                 return null;
             }
             else
@@ -1596,12 +1650,12 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             PlaceButtonGO.gameObject.SetActive(false);
             SnapButtonGO.gameObject.SetActive(true);
 
-            ReplacePlaneWithAnchor(centerPos);
+            ReplacePlaneWithAnchor(centerPos, planeToInteract);
 
             _isRayCasting = false;
             SnackBarText.text = string.Format("Finished casting spells"); //debug lol
 
-            planeToInteract.gameObject.SetActive(false);
+            planeToInteract.gameObject.SetActive(true);
         }
 
 
