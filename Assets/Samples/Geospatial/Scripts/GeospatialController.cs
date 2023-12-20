@@ -1512,6 +1512,28 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             SnackBarText.text = string.Format("Finished casting spells"); //debug lol
         }
 
+
+        // added by PPG
+        public void PlaceFixedGeospatialAnchor(GeospatialAnchorHistory history, GameObject go)
+        {
+            bool terrain = history.AnchorType == AnchorType.Terrain;
+
+            ARGeospatialAnchor anchor = AnchorManager.AddAnchor(history.Latitude, history.Longitude, history.Altitude, history.EunRotation);
+
+            if (anchor != null)
+            {
+                GameObject anchorGO = Instantiate(go, anchor.transform);
+                anchor.gameObject.SetActive(!terrain);
+                anchorGO.transform.parent = anchor.gameObject.transform;
+                _anchorObjects.Add(anchor.gameObject);
+                SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();
+            }
+            else
+            {
+                SnackBarText.text = GetDisplayStringForAnchorPlacedFailure();
+            }
+        }
+
         //////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////
