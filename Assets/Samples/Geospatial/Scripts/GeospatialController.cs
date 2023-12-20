@@ -1019,9 +1019,10 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             yield break;
         }
 
+        //own stuff
         //TerrainPromiseCoroutine version that gets overloaded with our custom GameObject from AddMyAnchors
-        private IEnumerator CheckTerrainPromise(ResolveAnchorOnTerrainPromise promise,
-            GeospatialAnchorHistory history, GameObject ownAnchor)
+        private IEnumerator CheckTerrainPromise2(ResolveAnchorOnTerrainPromise promise,
+            GeospatialAnchorHistory history, GameObject ownGO)
         {
             yield return promise;
 
@@ -1029,7 +1030,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             if (result.TerrainAnchorState == TerrainAnchorState.Success &&
                 result.Anchor != null)
             {
-                GameObject anchorGO = Instantiate(ownAnchor,
+                GameObject anchorGO = Instantiate(ownGO,
                     result.Anchor.gameObject.transform);
                 anchorGO.transform.parent = result.Anchor.gameObject.transform;
 
@@ -1063,6 +1064,90 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         }
 
         private void PlaceAnchorByScreenTap(Vector2 position)
+        {
+            if (_streetscapeGeometryVisibility)
+            {
+                // Raycast against streetscapeGeometry.
+                List<XRRaycastHit> hitResults = new List<XRRaycastHit>();
+                if (RaycastManager.RaycastStreetscapeGeometry(position, ref hitResults))
+                {
+                    if (_anchorType == AnchorType.Rooftop || _anchorType == AnchorType.Terrain)
+                    {
+                        var streetscapeGeometry =
+                            StreetscapeGeometryManager.GetStreetscapeGeometry(
+                                hitResults[0].trackableId);
+                        if (streetscapeGeometry == null)
+                        {
+                            return;
+                        }
+
+                        if (_streetscapegeometryGOs.ContainsKey(streetscapeGeometry.trackableId))
+                        {
+                            Pose modifiedPose = new Pose(hitResults[0].pose.position,
+                                Quaternion.LookRotation(Vector3.right, Vector3.up));
+
+                            GeospatialAnchorHistory history =
+                                CreateHistory(modifiedPose, _anchorType);
+
+                            // Anchor returned will be null, the coroutine will handle creating
+                            // the anchor when the promise is done.
+                            PlaceARAnchor(history, modifiedPose, hitResults[0].trackableId);
+                        }
+                    }
+                    else
+                    {
+                        GeospatialAnchorHistory history = CreateHistory(hitResults[0].pose,
+                            _anchorType);
+                        var anchor = PlaceARAnchor(history, hitResults[0].pose,
+                            hitResults[0].trackableId);
+                        if (anchor != null)
+                        {
+                            _historyCollection.Collection.Add(history);
+                        }
+
+                        ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
+                        SaveGeospatialAnchorHistory();
+                    }
+                }
+
+                return;
+            }
+
+            // Raycast against detected planes.
+            List<ARRaycastHit> planeHitResults = new List<ARRaycastHit>();
+            RaycastManager.Raycast(
+                position, planeHitResults, TrackableType.Planes | TrackableType.FeaturePoint);
+            if (planeHitResults.Count > 0)
+            {
+                GeospatialAnchorHistory history = CreateHistory(planeHitResults[0].pose,
+                    _anchorType);
+
+                if (_anchorType == AnchorType.Rooftop)
+                {
+                    // The coroutine will create the anchor when the promise is done.
+                    Quaternion eunRotation = CreateRotation(history);
+                    ResolveAnchorOnRooftopPromise rooftopPromise =
+                        AnchorManager.ResolveAnchorOnRooftopAsync(
+                            history.Latitude, history.Longitude,
+                            0, eunRotation);
+
+                    StartCoroutine(CheckRooftopPromise(rooftopPromise, history));
+                    return;
+                }
+
+                var anchor = PlaceGeospatialAnchor(history);
+                if (anchor != null)
+                {
+                    _historyCollection.Collection.Add(history);
+                }
+
+                ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
+                SaveGeospatialAnchorHistory();
+            }
+        }
+
+        //own stuff
+        private void ReplacePlaneWithAnchor(Vector2 position)
         {
             if (_streetscapeGeometryVisibility)
             {
@@ -1190,7 +1275,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                             history.Latitude, history.Longitude,
                             0, eunRotation);
 
-                    StartCoroutine(CheckTerrainPromise(terrainPromise, history));
+                    StartCoroutine(CheckTerrainPromise2(terrainPromise, history, planeToInteract));
                     return null;
 
                 case AnchorType.Geospatial:
@@ -1289,7 +1374,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                         Latitude, Longitude,
                         0, eunRotation);
 
-                StartCoroutine(CheckTerrainPromise(promise, history, ownAnchor));
+                StartCoroutine(CheckTerrainPromise2(promise, history, ownAnchor));
                 return null;
             }
             else
@@ -1506,10 +1591,17 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         private void ChangeStateRaycasting()
 		{
+            Vector2 centerPos = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+
             PlaceButtonGO.gameObject.SetActive(false);
             SnapButtonGO.gameObject.SetActive(true);
+
+            ReplacePlaneWithAnchor(centerPos);
+
             _isRayCasting = false;
             SnackBarText.text = string.Format("Finished casting spells"); //debug lol
+
+            planeToInteract.gameObject.SetActive(false);
         }
 
 
