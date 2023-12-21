@@ -50,6 +50,18 @@ public class DataManager : MonoBehaviour
 
     public bool debug = false;
 
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    // our inputs here
+
+    public Shader surface_shader;
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private void Awake()
     {
         if (Instance == null)
@@ -134,7 +146,7 @@ public class DataManager : MonoBehaviour
 
 
     // AddPlace including Texture2D Data that was captured before with your application. Texture2D automatically is converted to a base64String
-    // customBase64 is a custom field to submit any kind of data as base64String (conversion has to be done manually)
+    // customBase64 is a custom fiield to submit any kind of data as base64String (conversion has to be done manually)
     public void AddPlaceToDataBase(Group authorName, double lng, double lat, double lev, Quaternion rotation, string placeName,
         string placeInfo, Texture2D texture, string objectURL = "", string customText = "", string customBase64 = "")
     {
@@ -262,5 +274,44 @@ public class DataManager : MonoBehaviour
         Debug.Log(serializedJson);
 
         RESTApiClient.Instance.UploadSinglePlace(serializedJson);
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    // here our functions and variants of functions
+    private void GeneratePlacesWithPrimitives(List<Place> placesFromServer)
+    {
+        foreach (var place in placesFromServer)
+        {
+            Debug.Log(place.name);
+            // convert base64Texture from response to Texture2D
+            Material newMat = new Material(surface_shader);
+            var newGo = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Plane));
+            newGo.GetComponent<Renderer>().material = newMat;
+
+            if (!place.base64texture.Equals(""))
+            {
+                byte[] imageData = Convert.FromBase64String(place.base64texture);
+
+                Texture2D texture = new Texture2D(1024, 1024);
+                texture.filterMode = FilterMode.Trilinear;
+                texture.LoadImage(imageData);
+                newGo.GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
+            }
+
+            foreach (var location in place.locations)
+            {
+                
+                var newQuaternion = new Quaternion();
+                newQuaternion.x = location.rX;
+                newQuaternion.y = location.rY;
+                newQuaternion.z = location.rZ;
+                newQuaternion.w = location.rW;
+                
+                geospatialController.PlaceFixedGeospatialAnchor(new GeospatialAnchorHistory(DateTime.Now, location.lat, location.lng, location.lev, AnchorType.Terrain, newQuaternion), newGo);
+            }
+        }
     }
 }
