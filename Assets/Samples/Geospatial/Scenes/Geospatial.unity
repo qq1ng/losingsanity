@@ -2232,7 +2232,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 446.39, y: -1088}
+  m_AnchoredPosition: {x: 446.39, y: -500}
   m_SizeDelta: {x: 240, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &823126599
@@ -2426,7 +2426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   geospatialController: {fileID: 384014291}
-  demoGameObject: {fileID: 2921863405709726766, guid: 24bda899bd9474012882b8039b259df5, type: 3}
+  demoGameObject: {fileID: 857023938320643515, guid: 93b01a0f1171e3c4e83ab72bc84d3555, type: 3}
   demoTexture: {fileID: 2800000, guid: 540f7bcd4204544f092e302bcbe35a07, type: 3}
   debug: 0
   surface_shader: {fileID: 0}
