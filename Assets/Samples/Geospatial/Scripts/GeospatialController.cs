@@ -33,6 +33,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 #if UNITY_ANDROID
 
     using UnityEngine.Android;
+    using Unity.VisualScripting;
 #endif
 
     /// <summary>
@@ -196,11 +197,17 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         //Place Button Ui GameObject
         public GameObject PlaceButtonGO;
 
+        //Download Button UI GameObject
+        [SerializeField] public GameObject DownloadButtonGO;
+
         //Snap Button Ui component
         public Button SnapButton;
 
         //Place Button Ui component
         public Button PlaceButton;
+
+        //Download Button UI Component
+        public Button DownloadButton;
 
         //the material template we apply our textures to after snapping a pic
         public Material planeMaterialTemplate;
@@ -721,8 +728,10 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 //own stuff, we enable the snap button after localizing
                 //EnableSnapButtonGO();
                 SnapButtonGO.gameObject.SetActive(true);
+                DownloadButtonGO.gameObject.SetActive(true);
                 //we create a listener event looking for a Snap-buttonclick
                 SnapButton.onClick.AddListener(CaptureAndApply);
+                DownloadButton.onClick.AddListener(DownloadPlaces);
                 //we create a listener event looking for a Place-buttonclick
                 PlaceButton.onClick.AddListener(ChangeStateRaycasting);
 
@@ -1170,6 +1179,13 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
                 ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
                 SaveGeospatialAnchorHistory();
+
+                // texture upload to database, should update as soon as the photo is placed. TODO: test
+
+                DataManager.Instance.AddPlaceToDataBase(RESTApiClient.Instance.GetGroupname(),
+                    history.Longitude, history.Latitude, history.Altitude, history.EunRotation,
+                    "a beautiful palce in space", "frfr",
+                    planeToAnchorGO.GetComponent<Renderer>().material.mainTexture.ConvertTo<Texture2D>());
             }
         }
 
@@ -1648,6 +1664,18 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             planeToInteract.gameObject.SetActive(true);    //TODO: enable or disable blablasave
         }
 
+        // delete all anchors and the anchorhistory, then download and anchor everything down, eh eeeEEEEEEEEEEHHHH? :D
+        public void DownloadPlaces()
+        {
+            foreach (var anchor in _anchorObjects)
+            {
+                Destroy(anchor);
+            }
+
+            _anchorObjects.Clear();
+            _historyCollection.Collection.Clear();
+            DataManager.Instance.RequestPlacesDataFromServer();
+        }
 
         // added by PPG
         public void PlaceFixedGeospatialAnchor(GeospatialAnchorHistory history, GameObject go)
