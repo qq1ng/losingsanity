@@ -33,6 +33,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 #if UNITY_ANDROID
 
     using UnityEngine.Android;
+    using Unity.VisualScripting;
 #endif
 
     /// <summary>
@@ -196,11 +197,17 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         //Place Button Ui GameObject
         public GameObject PlaceButtonGO;
 
+        //Download Button UI GameObject
+        [SerializeField] public GameObject DownloadButtonGO;
+
         //Snap Button Ui component
         public Button SnapButton;
 
         //Place Button Ui component
         public Button PlaceButton;
+
+        //Download Button UI Component
+        public Button DownloadButton;
 
         //the material template we apply our textures to after snapping a pic
         public Material planeMaterialTemplate;
@@ -214,6 +221,8 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         private bool _firstTime = true;
 
         private bool _isRayCasting = false;
+
+        public GameObject base_image_plane;
 
 
         //////////////////////////////////////////////////////////////////////
@@ -719,8 +728,10 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 //own stuff, we enable the snap button after localizing
                 //EnableSnapButtonGO();
                 SnapButtonGO.gameObject.SetActive(true);
+                DownloadButtonGO.gameObject.SetActive(true);
                 //we create a listener event looking for a Snap-buttonclick
                 SnapButton.onClick.AddListener(CaptureAndApply);
+                DownloadButton.onClick.AddListener(DownloadPlaces);
                 //we create a listener event looking for a Place-buttonclick
                 PlaceButton.onClick.AddListener(ChangeStateRaycasting);
 
@@ -1019,9 +1030,10 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             yield break;
         }
 
+        //own stuff
         //TerrainPromiseCoroutine version that gets overloaded with our custom GameObject from AddMyAnchors
         private IEnumerator CheckTerrainPromise(ResolveAnchorOnTerrainPromise promise,
-            GeospatialAnchorHistory history, GameObject ownAnchor)
+            GeospatialAnchorHistory history, GameObject ownGO)
         {
             yield return promise;
 
@@ -1029,7 +1041,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             if (result.TerrainAnchorState == TerrainAnchorState.Success &&
                 result.Anchor != null)
             {
-                GameObject anchorGO = Instantiate(ownAnchor,
+                GameObject anchorGO = Instantiate(ownGO,
                     result.Anchor.gameObject.transform);
                 anchorGO.transform.parent = result.Anchor.gameObject.transform;
 
@@ -1145,6 +1157,38 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             }
         }
 
+        //own stuff
+        private void ReplacePlaneWithAnchor(Vector2 position, GameObject planeToAnchorGO)
+        {
+            //TODO: THIS IS IT
+            // Raycast against detected planes.
+            List<ARRaycastHit> planeHitResults = new List<ARRaycastHit>();
+            RaycastManager.Raycast(
+                position, planeHitResults, TrackableType.Planes | TrackableType.FeaturePoint);
+            if (planeHitResults.Count > 0)
+            {
+                GeospatialAnchorHistory history = CreateHistory(planeHitResults[0].pose,
+                    _anchorType);
+
+
+                var anchor = PlaceGeospatialAnchor(history, planeToAnchorGO);
+                if (anchor != null)
+                {
+                    _historyCollection.Collection.Add(history);
+                }
+
+                ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
+                SaveGeospatialAnchorHistory();
+
+                // texture upload to database, should update as soon as the photo is placed. TODO: test
+
+                DataManager.Instance.AddPlaceToDataBase(RESTApiClient.Instance.GetGroupname(),
+                    history.Longitude, history.Latitude, history.Altitude, history.EunRotation,
+                    "a beautiful palce in space", "frfr",
+                    planeToAnchorGO.GetComponent<Renderer>().material.mainTexture.ConvertTo<Texture2D>());
+            }
+        }
+
         private GeospatialAnchorHistory CreateHistory(Pose pose, AnchorType anchorType)
         {
             GeospatialPose geospatialPose = EarthManager.Convert(pose);
@@ -1222,6 +1266,60 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return anchor;
         }
 
+        private ARAnchor PlaceARAnchor(GeospatialAnchorHistory history, GameObject planeToAnchorGO, Pose pose = new Pose(),
+            TrackableId trackableId = new TrackableId())
+        {
+            Quaternion eunRotation = CreateRotation(history);
+            ARAnchor anchor = null;
+            switch (history.AnchorType)
+            {
+                case AnchorType.Rooftop:
+                    ResolveAnchorOnRooftopPromise rooftopPromise =
+                        AnchorManager.ResolveAnchorOnRooftopAsync(
+                            history.Latitude, history.Longitude,
+                            0, eunRotation);
+
+                    StartCoroutine(CheckRooftopPromise(rooftopPromise, history));
+                    return null;
+
+                case AnchorType.Terrain:
+                    ResolveAnchorOnTerrainPromise terrainPromise =
+                        AnchorManager.ResolveAnchorOnTerrainAsync(
+                            history.Latitude, history.Longitude,
+                            0, eunRotation);
+
+                    StartCoroutine(CheckTerrainPromise(terrainPromise, history, planeToAnchorGO));
+                    return null;
+
+                case AnchorType.Geospatial:
+                    ARStreetscapeGeometry streetscapegeometry =
+                        StreetscapeGeometryManager.GetStreetscapeGeometry(trackableId);
+                    if (streetscapegeometry != null)
+                    {
+                        anchor = StreetscapeGeometryManager.AttachAnchor(
+                            streetscapegeometry, pose);
+                    }
+
+                    if (anchor != null)
+                    {
+                        _anchorObjects.Add(anchor.gameObject);
+                        _historyCollection.Collection.Add(history);
+                        ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
+                        SaveGeospatialAnchorHistory();
+
+                        SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();
+                    }
+                    else
+                    {
+                        SnackBarText.text = GetDisplayStringForAnchorPlacedFailure();
+                    }
+
+                    break;
+            }
+
+            return anchor;
+        }
+
         private ARGeospatialAnchor PlaceGeospatialAnchor(
             GeospatialAnchorHistory history)
         {
@@ -1260,6 +1358,48 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             else
             {
                 SnackBarText.text = GetDisplayStringForAnchorPlacedFailure();
+            }
+
+            return anchor;
+        }
+
+        //overload version for gameobject for ReplacePLaneWithanchor bullshit
+        //TODO: cleanup
+        private ARGeospatialAnchor PlaceGeospatialAnchor(
+          GeospatialAnchorHistory history, GameObject planeToAnchorGO)
+        {
+            bool terrain = history.AnchorType == AnchorType.Terrain;
+            Quaternion eunRotation = CreateRotation(history);
+            ARGeospatialAnchor anchor = null;
+
+            if (terrain)
+            {
+                // Anchor returned will be null, the coroutine will handle creating the
+                // anchor when the promise is done.
+                ResolveAnchorOnTerrainPromise promise =
+                    AnchorManager.ResolveAnchorOnTerrainAsync(
+                        history.Latitude, history.Longitude,
+                        0, eunRotation);
+
+                StartCoroutine(CheckTerrainPromise(promise, history, planeToAnchorGO));
+                return null;
+            }
+            else
+            {
+                anchor = AnchorManager.AddAnchor(
+                    history.Latitude, history.Longitude, history.Altitude, eunRotation);
+            }
+
+            if (anchor != null)
+            {
+                anchor.gameObject.SetActive(!terrain);
+                planeToAnchorGO.transform.parent = anchor.gameObject.transform;
+                _anchorObjects.Add(anchor.gameObject);
+                SnackBarText.text = string.Format("we're so back"); //debug lol
+            }
+            else
+            {
+                SnackBarText.text = string.Format("it's so over"); //debug lol
             }
 
             return anchor;
@@ -1379,6 +1519,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         //this is our coroutine to snap pics or rather take screenshots
         public IEnumerator CaptureScreen()
         {
+            // find and then disable all the image planes in the scene before capturing the screenshot
+            GameObject[] ImagePlanes = GameObject.FindGameObjectsWithTag("imageplane");
+            foreach (GameObject _Plane in ImagePlanes) { _Plane.SetActive(false); }
             // Wait till the last possible moment before screen rendering to hide the UI
             yield return null;
             GameObject.Find("MasterCanvas").GetComponent<Canvas>().enabled = false;
@@ -1389,7 +1532,8 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             // Take screenshot
             capturedTexture = ScreenCapture.CaptureScreenshotAsTexture();
 
-            // Show UI after we're done
+            // Show UI and image planes after we're done
+            foreach (GameObject _Plane in ImagePlanes) { _Plane.SetActive(true); }
             GameObject.Find("MasterCanvas").GetComponent<Canvas>().enabled = true;
             SnackBarText.text = string.Format("bitch"); //Debug lol
         }
@@ -1398,7 +1542,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         GameObject CreateNewPlane()
         {
             // Create a new plane
-            planeToInteract = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            planeToInteract = GameObject.CreatePrimitive(PrimitiveType.Plane);    //solvedTODO: re-activate if all fails (awake) ((reminder))
             MeshRenderer planeRenderer = planeToInteract.GetComponent<MeshRenderer>();
 
 			if (planeRenderer != null)
@@ -1506,10 +1650,52 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         private void ChangeStateRaycasting()
 		{
+            Vector2 centerPos = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+
             PlaceButtonGO.gameObject.SetActive(false);
             SnapButtonGO.gameObject.SetActive(true);
+
+
+            ReplacePlaneWithAnchor(centerPos, planeToInteract);
+
             _isRayCasting = false;
-            SnackBarText.text = string.Format("Finished casting spells"); //debug lol
+            //SnackBarText.text = string.Format("Finished casting spells"); //debug lol TODO:re-enable after anchor conversion is figured out
+
+            planeToInteract.gameObject.SetActive(true);    //TODO: enable or disable blablasave
+        }
+
+        // delete all anchors and the anchorhistory, then download and anchor everything down, eh eeeEEEEEEEEEEHHHH? :D
+        public void DownloadPlaces()
+        {
+            foreach (var anchor in _anchorObjects)
+            {
+                Destroy(anchor);
+            }
+
+            _anchorObjects.Clear();
+            _historyCollection.Collection.Clear();
+            DataManager.Instance.RequestPlacesDataFromServer();
+        }
+
+        // added by PPG
+        public void PlaceFixedGeospatialAnchor(GeospatialAnchorHistory history, GameObject go)
+        {
+            bool terrain = history.AnchorType == AnchorType.Terrain;
+
+            ARGeospatialAnchor anchor = AnchorManager.AddAnchor(history.Latitude, history.Longitude, history.Altitude, history.EunRotation);
+
+            if (anchor != null)
+            {
+                GameObject anchorGO = Instantiate(go, anchor.transform);
+                anchor.gameObject.SetActive(!terrain);
+                anchorGO.transform.parent = anchor.gameObject.transform;
+                _anchorObjects.Add(anchor.gameObject);
+                SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();
+            }
+            else
+            {
+                SnackBarText.text = GetDisplayStringForAnchorPlacedFailure();
+            }
         }
 
         //////////////////////////////////////////////////////////////////////////////
