@@ -183,6 +183,8 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         public GameObject Object3;
         public GameObject Object4;
         public GameObject Object5;
+        //Startscreen duh
+        public GameObject StartScreen;
 
         //Class-level variable to store the reference to our plane we want to move
         private GameObject planeToInteract; 
@@ -357,6 +359,16 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         private List<GameObject> _anchorObjects = new List<GameObject>();
         private IEnumerator _startLocationService = null;
         private IEnumerator _asyncCheck = null;
+
+        /// <summary>
+        /// StartScreen Button click function.
+        /// </summary>
+
+        public void OnStartScreenClicked ()
+        {
+            StartScreen.active = false;
+            PrivacyPromptCanvas.active = true;
+        }
 
         /// <summary>
         /// Callback handling "Get Started" button click event in Privacy Prompt.
