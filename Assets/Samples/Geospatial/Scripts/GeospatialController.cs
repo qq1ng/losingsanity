@@ -224,6 +224,16 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         public GameObject base_image_plane;
 
+        public GameObject StartScreen;
+
+        public GameObject Feed;
+
+        public GameObject Map;
+
+        public GameObject ARCamera;
+
+        public GameObject BottomBar;
+
 
         //////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////
@@ -367,6 +377,33 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         private IEnumerator _startLocationService = null;
         private IEnumerator _asyncCheck = null;
 
+        public void StartScreenClicked ()
+        {
+            StartScreen.active = false;
+            PrivacyPromptCanvas.active = true;
+            BottomBar.active = true;
+        }
+
+        public void ARbuttonClicked ()
+        {
+            ARCamera.active = true;
+            Feed.active = false;
+            Map.active = false;
+        }
+
+        public void FeedbuttonClicked ()
+        {
+            Feed.active = true;
+            Map.active = false;
+            ARCamera.active = false;
+        }
+
+        public void MapbuttonClicked ()
+        {
+            Map.active = true;
+            Feed.active = false;
+            ARCamera.active = false;
+        }
         /// <summary>
         /// Callback handling "Get Started" button click event in Privacy Prompt.
         /// </summary>
