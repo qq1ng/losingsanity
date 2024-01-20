@@ -380,7 +380,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         public void StartScreenClicked ()
         {
             StartScreen.active = false;
-            PrivacyPromptCanvas.active = true;
+            ARCamera.active = true;
             BottomBar.active = true;
         }
 
