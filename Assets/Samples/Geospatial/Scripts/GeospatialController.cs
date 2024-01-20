@@ -285,7 +285,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         /// <summary>
         /// The limitation of how many Geospatial Anchors can be stored in local storage.
         /// </summary>
-        private const int _storageLimit = 20;
+        private const int _storageLimit = 99;
 
         /// <summary>
         /// Accuracy threshold for orientation yaw accuracy in degrees that can be treated as
