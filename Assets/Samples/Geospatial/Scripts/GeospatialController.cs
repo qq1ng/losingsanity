@@ -2022,6 +2022,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 $"  ALT: {pose.Altitude:F2}\n" +
                 $"  VerticalAcc: {pose.VerticalAccuracy:F2}\n" +
                 $". EunRotation: {pose.EunRotation:F2}\n" +
+                $". Anchortype: {_anchorType}\n" +
                 $"  OrientationYawAcc: {pose.OrientationYawAccuracy:F2}";
         }
 
