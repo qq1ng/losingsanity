@@ -322,7 +322,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         /// <summary>
         /// Represents the current anchor type of the anchor being placed in the scene.
         /// </summary>
-        private AnchorType _anchorType = AnchorType.Geospatial;
+        private AnchorType _anchorType = AnchorType.Terrain;
 
         /// <summary>
         /// Determines if streetscape geometry is rendered in the scene.
