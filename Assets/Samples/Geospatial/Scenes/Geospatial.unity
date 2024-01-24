@@ -1015,11 +1015,17 @@ MonoBehaviour:
   InfoText: {fileID: 1587000028}
   SnackBarText: {fileID: 1382347801}
   DebugText: {fileID: 1664493018}
-  Object1: {fileID: 0}
-  Object2: {fileID: 7467276607958204105, guid: 4d463fd712f3aee4db3e743f863ad884, type: 3}
-  Object3: {fileID: 8477016300082342058, guid: 9b7a44660040ba14faff7326de9a1992, type: 3}
+  Object1: {fileID: 5017605755707141306, guid: 322162bb873597844b9fbcf4db527e18, type: 3}
+  Object2: {fileID: 5017605755707141306, guid: 322162bb873597844b9fbcf4db527e18, type: 3}
+  Object3: {fileID: 0}
   Object4: {fileID: 0}
-  Object5: {fileID: 0}
+  Object5: {fileID: 8824925131125461336, guid: a3826c1ee042c8b4594b6329fa59f359, type: 3}
+  Object6: {fileID: 0}
+  Object7: {fileID: 0}
+  Object8: {fileID: 0}
+  Object9: {fileID: 0}
+  Object10: {fileID: 0}
+  Object11: {fileID: 0}
   arCamera: {fileID: 1451910691}
   SnapButtonGO: {fileID: 2117456677}
   PlaceButtonGO: {fileID: 1365526880}
