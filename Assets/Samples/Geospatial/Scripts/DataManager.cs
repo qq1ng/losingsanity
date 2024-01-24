@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using Google.XR.ARCoreExtensions.Samples.Geospatial;
 using Newtonsoft.Json;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // Classes for the json deserialization, followes the structure of the json from the server
@@ -101,7 +105,7 @@ public class DataManager : MonoBehaviour
 
     private void GeneratePlaces(List<Place> placesFromServer)
     {
-        foreach(var place in placesFromServer)
+        foreach (var place in placesFromServer)
         {
             Debug.Log(place.name);
             //GameObject gltfObject = new GameObject();
@@ -112,7 +116,7 @@ public class DataManager : MonoBehaviour
 
             // convert base64Texture from response to Texture2D
             var newGo = Instantiate(demoGameObject);
-            
+
             if (!place.base64texture.Equals(""))
             {
                 byte[] imageData = Convert.FromBase64String(place.base64texture);
@@ -215,7 +219,7 @@ public class DataManager : MonoBehaviour
         newPlace.url = objectURL;
         newPlace.base64texture = "";
         newPlace.base64custom = "";
-        newPlace.customText = customText;
+        newPlace.customText = QuaternionToBase64(rotation);//customText;
         newPlace.locations = new Location[] { newLocation };
         newPlace.autor = newAutor;
 
@@ -303,15 +307,41 @@ public class DataManager : MonoBehaviour
 
             foreach (var location in place.locations)
             {
-                
-                var newQuaternion = new Quaternion();
+
+                var newQuaternion = Base64ToQuaternion(place.customText);//new Quaternion();
+                /*
                 newQuaternion.x = location.rX;
                 newQuaternion.y = location.rY;
                 newQuaternion.z = location.rZ;
                 newQuaternion.w = location.rW;
-                
+                */
                 geospatialController.PlaceFixedGeospatialAnchor(new GeospatialAnchorHistory(DateTime.Now, location.lat, location.lng, location.lev, AnchorType.Terrain, newQuaternion), newGo);
             }
         }
+    }
+
+    private String QuaternionToBase64(Quaternion q)
+    {
+        if (q == null)
+            return null;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        MemoryStream ms = new MemoryStream();
+        bf.Serialize(ms, q);
+
+        return Convert.ToBase64String(ms.ToArray());
+    }
+
+    // Convert a byte array to an Object
+    private Quaternion Base64ToQuaternion(String rot_string)
+    {
+        byte[] rot_bytes = Convert.FromBase64String(rot_string);
+        MemoryStream memStream = new MemoryStream();
+        BinaryFormatter binForm = new BinaryFormatter();
+        memStream.Write(rot_bytes, 0, rot_bytes.Length);
+        memStream.Seek(0, SeekOrigin.Begin);
+        Quaternion q = (Quaternion)binForm.Deserialize(memStream);
+
+        return q;
     }
 }

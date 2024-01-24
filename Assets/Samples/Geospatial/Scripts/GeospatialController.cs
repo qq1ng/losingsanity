@@ -1200,11 +1200,14 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             //TODO: THIS IS IT
             // Raycast against detected planes.
             List<ARRaycastHit> planeHitResults = new List<ARRaycastHit>();
+            var phone_pose = EarthManager.EarthState == EarthState.Enabled &&
+                EarthManager.EarthTrackingState == TrackingState.Tracking ?
+                EarthManager.CameraGeospatialPose : new GeospatialPose();
             RaycastManager.Raycast(
                 position, planeHitResults, TrackableType.Planes | TrackableType.FeaturePoint);
             if (planeHitResults.Count > 0)
             {
-                GeospatialAnchorHistory history = CreateHistory(planeHitResults[0].pose,
+                GeospatialAnchorHistory history = CreateHistory(new Pose(planeHitResults[0].pose.position, phone_pose.EunRotation),
                     _anchorType);
 
 
@@ -1222,7 +1225,8 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 DataManager.Instance.AddPlaceToDataBase(RESTApiClient.Instance.GetGroupname(),
                     history.Longitude, history.Latitude, history.Altitude, history.EunRotation,
                     "a beautiful palce in space", "frfr",
-                    planeToAnchorGO.GetComponent<Renderer>().material.mainTexture.ConvertTo<Texture2D>());
+                    planeToAnchorGO.GetComponent<Renderer>().material.mainTexture.ConvertTo<Texture2D>(),
+                    "", phone_pose.EunRotation.ToString(), "");
             }
         }
 
