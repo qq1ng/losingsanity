@@ -1095,6 +1095,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 SnackBarText.text = GetDisplayStringForAnchorPlacedFailure();
             }
 
+            //TODO: destroy some time later 
+            ownGO.SetActive(false);
+
             yield break;
         }
 
