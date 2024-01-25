@@ -178,6 +178,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         //////////////////////////////////////////////////////////////////////
         //below is where we keep our own stuff
 
+        public GameObject simons_debug_thingy;
+        private String simons_debug_string="";
+
         //our own GameObjects we want to load on startup
         public GameObject Object1;
         public GameObject Object2;

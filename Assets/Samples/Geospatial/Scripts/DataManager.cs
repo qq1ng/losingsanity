@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Google.XR.ARCoreExtensions.Samples.Geospatial;
@@ -7,6 +8,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 // Classes for the json deserialization, followes the structure of the json from the server
 public class Place
@@ -61,6 +63,8 @@ public class DataManager : MonoBehaviour
     // our inputs here
 
     public Shader surface_shader;
+    public GameObject simons_debug_thingy;
+    private String debug_string = "";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,9 +99,9 @@ public class DataManager : MonoBehaviour
                 Debug.Log("Error loading Places or Empty");
                 return;
             }
-
+            //m_Text
             // processes the data from the server
-            GeneratePlaces(placesFromServer);
+            GeneratePlacesWithPrimitives(placesFromServer);
             Debug.Log("Loaded data remotely from PlaceIT-Api", this);
         });
     }
@@ -287,18 +291,18 @@ public class DataManager : MonoBehaviour
     // here our functions and variants of functions
     private void GeneratePlacesWithPrimitives(List<Place> placesFromServer)
     {
+        output_debug("number of places: " + placesFromServer.Count.ToString());
         foreach (var place in placesFromServer)
         {
-            Debug.Log(place.name);
             // convert base64Texture from response to Texture2D
             Material newMat = new Material(surface_shader);
             var newGo = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Plane));
             newGo.GetComponent<Renderer>().material = newMat;
+            output_debug(place.id.ToString());
 
             if (!place.base64texture.Equals(""))
             {
                 byte[] imageData = Convert.FromBase64String(place.base64texture);
-
                 Texture2D texture = new Texture2D(1024, 1024);
                 texture.filterMode = FilterMode.Trilinear;
                 texture.LoadImage(imageData);
@@ -308,7 +312,8 @@ public class DataManager : MonoBehaviour
             foreach (var location in place.locations)
             {
 
-                var newQuaternion = Base64ToQuaternion(place.customText);//new Quaternion();
+                var newQuaternion = place.customText != "" ? Base64ToQuaternion(place.customText) : Quaternion.identity;//new Quaternion();
+                output_debug("converted customText to quaternion");
                 /*
                 newQuaternion.x = location.rX;
                 newQuaternion.y = location.rY;
@@ -320,6 +325,7 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    // Convert a Quaternion to an Base64String
     private String QuaternionToBase64(Quaternion q)
     {
         if (q == null)
@@ -332,16 +338,28 @@ public class DataManager : MonoBehaviour
         return Convert.ToBase64String(ms.ToArray());
     }
 
-    // Convert a byte array to an Object
+    // Convert a Base64String to a Quaternion
     private Quaternion Base64ToQuaternion(String rot_string)
     {
-        byte[] rot_bytes = Convert.FromBase64String(rot_string);
-        MemoryStream memStream = new MemoryStream();
-        BinaryFormatter binForm = new BinaryFormatter();
-        memStream.Write(rot_bytes, 0, rot_bytes.Length);
-        memStream.Seek(0, SeekOrigin.Begin);
-        Quaternion q = (Quaternion)binForm.Deserialize(memStream);
-
+        Quaternion q = new Quaternion();
+        output_debug("created new quaternion");
+        output_debug("|" + rot_string + "|");
+        rot_string = rot_string.Substring(1, rot_string.Length - 2);
+        output_debug("cut of the ends of the string");
+        //t.Trim('(', ')');
+        string[] c = rot_string.Split(", ");
+        output_debug("split values");
+        q.x = float.Parse(c[0], CultureInfo.InvariantCulture.NumberFormat);
+        q.y = float.Parse(c[1], CultureInfo.InvariantCulture.NumberFormat);
+        q.z = float.Parse(c[2], CultureInfo.InvariantCulture.NumberFormat);
+        q.w = float.Parse(c[3], CultureInfo.InvariantCulture.NumberFormat);
+        output_debug("parsed strings to floats");
+        output_debug(q.ToString());
         return q;
+    }
+
+    private void output_debug(String a)
+    {
+        simons_debug_thingy.GetComponent<Text>().text += a + "\n";
     }
 }
