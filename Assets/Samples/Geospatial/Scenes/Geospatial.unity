@@ -1015,17 +1015,14 @@ MonoBehaviour:
   InfoText: {fileID: 1587000028}
   SnackBarText: {fileID: 1382347801}
   DebugText: {fileID: 1664493018}
-  Object1: {fileID: 5017605755707141306, guid: 322162bb873597844b9fbcf4db527e18, type: 3}
-  Object2: {fileID: 5017605755707141306, guid: 322162bb873597844b9fbcf4db527e18, type: 3}
-  Object3: {fileID: 0}
-  Object4: {fileID: 0}
-  Object5: {fileID: 8824925131125461336, guid: a3826c1ee042c8b4594b6329fa59f359, type: 3}
-  Object6: {fileID: 0}
-  Object7: {fileID: 0}
-  Object8: {fileID: 0}
-  Object9: {fileID: 0}
-  Object10: {fileID: 0}
-  Object11: {fileID: 0}
+  Object1: {fileID: 4354075042085964320, guid: 5511b069367dba34899dcb8228f25668, type: 3}
+  Object2: {fileID: 3998640665081370738, guid: c0b03c3a3b94664448b00013c83a9e21, type: 3}
+  Object3: {fileID: 2323180782839897924, guid: d0dd8fadbd62fe344b09c85a89cd0ba9, type: 3}
+  Object4: {fileID: 2930724251925704632, guid: 842b5e050c8c6004fa307c8fad9a35fe, type: 3}
+  Object5: {fileID: 6990008630968635728, guid: 497b76990fc9f37448cd195620784173, type: 3}
+  Object6: {fileID: 8480193798493344148, guid: 10277e09c88a11e4b9cc1a0c7e70733d, type: 3}
+  Object7: {fileID: 5914658283917728029, guid: 7b01fbf5601215541bf8c1a2c4bae717, type: 3}
+  Object8: {fileID: 651275296344540615, guid: ae103f7e8e8a9fa48bc5f853b57c1070, type: 3}
   arCamera: {fileID: 1451910691}
   SnapButtonGO: {fileID: 2117456677}
   PlaceButtonGO: {fileID: 1365526880}
