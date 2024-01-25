@@ -190,9 +190,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         public GameObject Object6;
         public GameObject Object7;
         public GameObject Object8;
-        public GameObject Object9;
-        public GameObject Object10;
-        public GameObject Object11;
+
 
         //Class-level variable to store the reference to our plane we want to move
         private GameObject planeToInteract; 
@@ -1460,32 +1458,29 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         void AddMyAnchors()
         {
-            GeospatialAnchorHistory history = new GeospatialAnchorHistory(49.80969610347698, 8.890539800391776, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
-            MyPlaceGeospatialAnchor(history, Object1, 49.80969610347698, 8.890539800391776, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            GeospatialAnchorHistory history = new GeospatialAnchorHistory(49.901507, 8.856430, 0, AnchorType.Terrain, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
+            MyPlaceGeospatialAnchor(history, Object1, 49.901507, 8.856430, 0, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
 
-            history = new GeospatialAnchorHistory(49.80969610347694, 8.890539800391773, 0, AnchorType.Terrain, values_to_quaternion(-0.02f, 0.42f, -0.01f, -0.9f));
-            MyPlaceGeospatialAnchor(history, Object2, 49.80969610347694, 8.890539800391773, 0, values_to_quaternion(-0.02f, 0.42f, -0.01f, -0.9f));
+            history = new GeospatialAnchorHistory(49.901723, 8.856313, 0, AnchorType.Terrain, values_to_quaternion(-0.30f, 0.70f, -0.41f, -0.49f));
+            MyPlaceGeospatialAnchor(history, Object2, 49.901723, 8.856313, 0, values_to_quaternion(-0.30f, 0.70f, -0.41f, -0.49f));
 
-            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
-            MyPlaceGeospatialAnchor(history, Object3, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            history = new GeospatialAnchorHistory(49.901620, 8.856328, 0, AnchorType.Terrain, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
+            MyPlaceGeospatialAnchor(history, Object3, 49.901620, 8.856328, 0, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
 
-            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
-            MyPlaceGeospatialAnchor(history, Object4, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            history = new GeospatialAnchorHistory(49.901844, 8.857139, 0, AnchorType.Terrain, values_to_quaternion(-0.50f, 0.11f, -0.06f, -0.9f));
+            MyPlaceGeospatialAnchor(history, Object4, 49.901844, 8.857139, 0, values_to_quaternion(-0.50f, 0.11f, -0.06f, -0.9f));
 
-            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
-            MyPlaceGeospatialAnchor(history, Object5, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            history = new GeospatialAnchorHistory(49.901699, 8.856711, 0, AnchorType.Terrain, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
+            MyPlaceGeospatialAnchor(history, Object5, 49.901699, 8.856711, 0, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
 
-            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
-            MyPlaceGeospatialAnchor(history, Object6, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            history = new GeospatialAnchorHistory(49.901763, 8.856367, 0, AnchorType.Terrain, values_to_quaternion(0.7f, -0.2f, 0.2f, 0.7f));
+            MyPlaceGeospatialAnchor(history, Object6, 49.901763, 8.856367, 0, values_to_quaternion(0.7f, -0.2f, 0.2f, 0.7f));
 
-            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
-            MyPlaceGeospatialAnchor(history, Object7, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            history = new GeospatialAnchorHistory(49.902018, 8.856600, 0, AnchorType.Terrain, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
+            MyPlaceGeospatialAnchor(history, Object7, 49.902018, 8.856600, 0, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
 
-            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
-            MyPlaceGeospatialAnchor(history, Object8, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
-
-            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
-            MyPlaceGeospatialAnchor(history, Object9, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            history = new GeospatialAnchorHistory(49.901910, 8.857221, 0, AnchorType.Terrain, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
+            MyPlaceGeospatialAnchor(history, Object8, 49.901910, 8.857221, 0, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
         }
 
         private ARGeospatialAnchor MyPlaceGeospatialAnchor(
