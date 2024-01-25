@@ -1590,8 +1590,8 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         public IEnumerator CaptureScreen()
         {
             // find and then disable all the image planes in the scene before capturing the screenshot
-            GameObject[] ImagePlanes = GameObject.FindGameObjectsWithTag("imageplane");
-            foreach (GameObject _Plane in ImagePlanes) { _Plane.SetActive(false); }
+            //GameObject[] ImagePlanes = GameObject.FindGameObjectsWithTag("imageplane");
+            foreach (GameObject _Plane in _anchorObjects) { _Plane.SetActive(false); }
             // Wait till the last possible moment before screen rendering to hide the UI
             yield return null;
             GameObject.Find("MasterCanvas").GetComponent<Canvas>().enabled = false;
@@ -1603,7 +1603,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             capturedTexture = ScreenCapture.CaptureScreenshotAsTexture();
 
             // Show UI and image planes after we're done
-            foreach (GameObject _Plane in ImagePlanes) { _Plane.SetActive(true); }
+            foreach (GameObject _Plane in _anchorObjects) { _Plane.SetActive(true); }
             GameObject.Find("MasterCanvas").GetComponent<Canvas>().enabled = true;
             SnackBarText.text = string.Format("bitch"); //Debug lol
         }
@@ -1757,7 +1757,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             if (anchor != null)
             {
                 GameObject anchorGO = Instantiate(go, anchor.transform);
-                anchor.gameObject.SetActive(!terrain);
+                anchor.gameObject.SetActive(terrain);
                 anchorGO.transform.parent = anchor.gameObject.transform;
                 _anchorObjects.Add(anchor.gameObject);
                 SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();

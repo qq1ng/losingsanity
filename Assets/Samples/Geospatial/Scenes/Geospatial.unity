@@ -1015,6 +1015,7 @@ MonoBehaviour:
   InfoText: {fileID: 1587000028}
   SnackBarText: {fileID: 1382347801}
   DebugText: {fileID: 1664493018}
+  simons_debug_thingy: {fileID: 0}
   Object1: {fileID: 4354075042085964320, guid: 5511b069367dba34899dcb8228f25668, type: 3}
   Object2: {fileID: 3998640665081370738, guid: c0b03c3a3b94664448b00013c83a9e21, type: 3}
   Object3: {fileID: 2323180782839897924, guid: d0dd8fadbd62fe344b09c85a89cd0ba9, type: 3}
@@ -5267,7 +5268,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1532398843
 MonoBehaviour:
   m_ObjectHideFlags: 0
