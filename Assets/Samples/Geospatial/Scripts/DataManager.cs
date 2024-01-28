@@ -327,6 +327,9 @@ public class DataManager : MonoBehaviour
             //newGo.SetActive(false);
             Destroy(newGo);
         }
+        //TODO: does this cause unexpected behaviour?
+        //we're adding back in the onstartupAnchors we just deleted (too lazy to figure out how to exclude from deletion)
+        geospatialController.AddMyAnchors();
     }
 
     // Convert a Quaternion to an Base64String

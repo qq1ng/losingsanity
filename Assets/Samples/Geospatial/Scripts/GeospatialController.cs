@@ -832,6 +832,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                     _clearStreetscapeGeometryRenderObjects = false;
                 }
 
+                //TODO: maybe use this as placement method again at some point
+                //we dont want the weird prefab anchors when people mash the screen
+                /*
                 if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began
                     && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)
                     && _anchorObjects.Count < _storageLimit)
@@ -839,6 +842,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                     // Set anchor on screen tap.
                     PlaceAnchorByScreenTap(Input.GetTouch(0).position);
                 }
+                */
 
                 // Hide anchor settings and toggles if the storage limit has been reached.
                 if (_anchorObjects.Count >= _storageLimit)
@@ -1456,7 +1460,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return anchor;
         }
 
-        void AddMyAnchors()
+        public void AddMyAnchors()
         {
             GeospatialAnchorHistory history = new GeospatialAnchorHistory(49.901507, 8.856430, 0, AnchorType.Terrain, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
             MyPlaceGeospatialAnchor(history, Object1, 49.901507, 8.856430, 0, values_to_quaternion(-0.46f, 0.14f, -0.07f, -0.87f));
