@@ -1,31 +1,3 @@
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣤⣤⣤⣤⣤⣤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠻⠿⢿⣿⣿⣿⣿⣿⣶⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⣿⣿⣿⣿⣿⣿⣶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⣙⢿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠻⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⢹⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⡟⠹⠿⠟⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⠋⡬⢿⣿⣷⣤⣤⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⡇⢸⡇⢸⣿⣿⣿⠟⠁⢀⣬⢽⣿⣿⣿⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣧⣈⣛⣿⣿⣿⡇⠀⠀⣾⠁⢀⢻⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⣿⣿⣧⣄⣀⠙⠷⢋⣼⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
-//⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
-//⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁
-//⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀
-//⠸⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀
-//⠀⢹⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀
-//⠀⠀⠹⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀⠀
-//⠀⠀⠀⠙⣿⣿⣿⣿⣿⣶⣤⣀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠀⠀⠀⠀
-//⠀⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-//⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠛⠛⠛⠛⠛⠛⠛⠋⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-//Felix Janssen
-
-
-
 // <copyright file="GeospatialController.cs" company="Google LLC">
 //
 // Copyright 2022 Google LLC
@@ -206,9 +178,6 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         //////////////////////////////////////////////////////////////////////
         //below is where we keep our own stuff
 
-        public GameObject simons_debug_thingy;
-        private String simons_debug_string="";
-
         //our own GameObjects we want to load on startup
         public GameObject Object1;
         public GameObject Object2;
@@ -218,7 +187,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         public GameObject Object6;
         public GameObject Object7;
         public GameObject Object8;
-
+        public GameObject Object9;
+        public GameObject Object10;
+        public GameObject Object11;
 
         //Class-level variable to store the reference to our plane we want to move
         private GameObject planeToInteract; 
@@ -890,9 +861,6 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                     _clearStreetscapeGeometryRenderObjects = false;
                 }
 
-                //TODO: maybe use this as placement method again at some point
-                //we dont want the weird prefab anchors when people mash the screen
-                /*
                 if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began
                     && !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)
                     && _anchorObjects.Count < _storageLimit)
@@ -900,7 +868,6 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                     // Set anchor on screen tap.
                     PlaceAnchorByScreenTap(Input.GetTouch(0).position);
                 }
-                */
 
                 // Hide anchor settings and toggles if the storage limit has been reached.
                 if (_anchorObjects.Count >= _storageLimit)
@@ -1272,14 +1239,11 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             //TODO: THIS IS IT
             // Raycast against detected planes.
             List<ARRaycastHit> planeHitResults = new List<ARRaycastHit>();
-            var phone_pose = EarthManager.EarthState == EarthState.Enabled &&
-                EarthManager.EarthTrackingState == TrackingState.Tracking ?
-                EarthManager.CameraGeospatialPose : new GeospatialPose();
             RaycastManager.Raycast(
                 position, planeHitResults, TrackableType.Planes | TrackableType.FeaturePoint);
             if (planeHitResults.Count > 0)
             {
-                GeospatialAnchorHistory history = CreateHistory(new Pose(planeHitResults[0].pose.position, phone_pose.EunRotation),
+                GeospatialAnchorHistory history = CreateHistory(planeHitResults[0].pose,
                     _anchorType);
 
 
@@ -1297,8 +1261,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 DataManager.Instance.AddPlaceToDataBase(RESTApiClient.Instance.GetGroupname(),
                     history.Longitude, history.Latitude, history.Altitude, history.EunRotation,
                     "a beautiful palce in space", "frfr",
-                    planeToAnchorGO.GetComponent<Renderer>().material.mainTexture.ConvertTo<Texture2D>(),
-                    "", phone_pose.EunRotation.ToString(), "");
+                    planeToAnchorGO.GetComponent<Renderer>().material.mainTexture.ConvertTo<Texture2D>());
             }
         }
 
@@ -1492,7 +1455,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 ResolveAnchorOnTerrainPromise promise =
                     AnchorManager.ResolveAnchorOnTerrainAsync(
                         history.Latitude, history.Longitude,
-                        1.5, eunRotation);
+                        0, eunRotation);
 
                 StartCoroutine(CheckTerrainPromise(promise, history, planeToAnchorGO));
                 return null;
@@ -1518,31 +1481,34 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return anchor;
         }
 
-        public void AddMyAnchors()
+        void AddMyAnchors()
         {
-            GeospatialAnchorHistory history = new GeospatialAnchorHistory(49.901507, 8.856430, 1, AnchorType.Terrain, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
-            MyPlaceGeospatialAnchor(history, Object1, 49.901507, 8.856430, 1, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
+            GeospatialAnchorHistory history = new GeospatialAnchorHistory(49.80969610347698, 8.890539800391776, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            MyPlaceGeospatialAnchor(history, Object1, 49.80969610347698, 8.890539800391776, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
 
-            history = new GeospatialAnchorHistory(49.901723, 8.856313, 1, AnchorType.Terrain, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.49f));
-            MyPlaceGeospatialAnchor(history, Object2, 49.901723, 8.856313, 1, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.49f));
+            history = new GeospatialAnchorHistory(49.80969610347694, 8.890539800391773, 0, AnchorType.Terrain, values_to_quaternion(-0.02f, 0.42f, -0.01f, -0.9f));
+            MyPlaceGeospatialAnchor(history, Object2, 49.80969610347694, 8.890539800391773, 0, values_to_quaternion(-0.02f, 0.42f, -0.01f, -0.9f));
 
-            history = new GeospatialAnchorHistory(49.901620, 8.856328, 1, AnchorType.Terrain, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
-            MyPlaceGeospatialAnchor(history, Object3, 49.901620, 8.856328, 1, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
+            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            MyPlaceGeospatialAnchor(history, Object3, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
 
-            history = new GeospatialAnchorHistory(49.901844, 8.857139, 1, AnchorType.Terrain, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.9f));
-            MyPlaceGeospatialAnchor(history, Object4, 49.901844, 8.857139, 1, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.9f));
+            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            MyPlaceGeospatialAnchor(history, Object4, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
 
-            history = new GeospatialAnchorHistory(49.901699, 8.856711, 1, AnchorType.Terrain, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
-            MyPlaceGeospatialAnchor(history, Object5, 49.901699, 8.856711, 1, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
+            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            MyPlaceGeospatialAnchor(history, Object5, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
 
-            history = new GeospatialAnchorHistory(49.901763, 8.856367, 1, AnchorType.Terrain, values_to_quaternion(0.0f, 1.0f, 0.0f, 0.7f));
-            MyPlaceGeospatialAnchor(history, Object6, 49.901763, 8.856367, 1, values_to_quaternion(0.0f, 1.0f, 0.0f, 0.7f));
+            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            MyPlaceGeospatialAnchor(history, Object6, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
 
-            history = new GeospatialAnchorHistory(49.902018, 8.856600, 1, AnchorType.Terrain, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
-            MyPlaceGeospatialAnchor(history, Object7, 49.902018, 8.856600, 1, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
+            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            MyPlaceGeospatialAnchor(history, Object7, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
 
-            history = new GeospatialAnchorHistory(49.901910, 8.857221, 1, AnchorType.Terrain, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
-            MyPlaceGeospatialAnchor(history, Object8, 49.901910, 8.857221, 1, values_to_quaternion(0.0f, 1.0f, 0.0f, -0.87f));
+            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            MyPlaceGeospatialAnchor(history, Object8, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+
+            history = new GeospatialAnchorHistory(49.80969610347690, 8.890539800391770, 0, AnchorType.Terrain, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
+            MyPlaceGeospatialAnchor(history, Object9, 49.80969610347690, 8.890539800391770, 0, values_to_quaternion(-0.01f, 0.93f, -0.07f, -0.4f));
         }
 
         private ARGeospatialAnchor MyPlaceGeospatialAnchor(
@@ -1652,8 +1618,8 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         public IEnumerator CaptureScreen()
         {
             // find and then disable all the image planes in the scene before capturing the screenshot
-            //GameObject[] ImagePlanes = GameObject.FindGameObjectsWithTag("imageplane");
-            foreach (GameObject _Plane in _anchorObjects) { _Plane.SetActive(false); }
+            GameObject[] ImagePlanes = GameObject.FindGameObjectsWithTag("imageplane");
+            foreach (GameObject _Plane in ImagePlanes) { _Plane.SetActive(false); }
             // Wait till the last possible moment before screen rendering to hide the UI
             yield return null;
             GameObject.Find("MasterCanvas").GetComponent<Canvas>().enabled = false;
@@ -1665,7 +1631,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             capturedTexture = ScreenCapture.CaptureScreenshotAsTexture();
 
             // Show UI and image planes after we're done
-            foreach (GameObject _Plane in _anchorObjects) { _Plane.SetActive(true); }
+            foreach (GameObject _Plane in ImagePlanes) { _Plane.SetActive(true); }
             GameObject.Find("MasterCanvas").GetComponent<Canvas>().enabled = true;
             SnackBarText.text = string.Format("bitch"); //Debug lol
         }
@@ -1687,7 +1653,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             // Set its position, rotation, and scale as needed
             //newPlane.transform.position = new Vector3(planeCount * 2.0f, 0, 0); // Offset by 2 units to the right for each new plane
             //DISASTERnewPlane.transform.rotation = Quaternion.Euler(0, eunRotation.eulerAngles.y, 0); // Face the camera based on EunRotation
-            planeToInteract.transform.localScale = new Vector3(0.2f, 0.4f, 0.4f);
+            planeToInteract.transform.localScale = new Vector3(0.1f, 0.2f, 0.2f);
             // Create a new material based on the template
             Material newMaterial = new Material(planeMaterialTemplate);
             planeToInteract.GetComponent<Renderer>().material = newMaterial;
@@ -1704,7 +1670,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             Vector3 dir = arCamera.transform.position - planeToInteract.transform.position;
             dir.y = 0;
             Quaternion lookRotation = Quaternion.LookRotation(dir);                 // Calculate rotation to face the camera
-            Quaternion additionalRotation = Quaternion.Euler(90f, 0f, 0f);          // Apply an additional rotation to the X-axis by -90 degrees
+            Quaternion additionalRotation = Quaternion.Euler(90f, 0f, 0f);         // Apply an additional rotation to the X-axis by -90 degrees
             Quaternion finalRotation = lookRotation * additionalRotation;           // Combine both rotations
             planeToInteract.transform.rotation = finalRotation;                     // Apply the final rotation to the plane
 
@@ -1720,23 +1686,15 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             List<ARRaycastHit> hits = new List<ARRaycastHit>();
             RaycastManager.Raycast(centerPos, hits, TrackableType.Planes | TrackableType.FeaturePoint);
 
-            //TODO: Place button stays active once a single raycast was good, but needs to be "off" or greyed or whatevs when theres no hit
             if (hits.Count > 0)
             {
                 SnapButtonGO.gameObject.SetActive(false);
                 PlaceButtonGO.gameObject.SetActive(true);
-
-                // Adjusting the y-coordinate by adding 1 unit
-                planeToInteract.transform.position = new Vector3(
-                    hits[0].pose.position.x,
-                    hits[0].pose.position.y + 1.5f,
-                    hits[0].pose.position.z
-                );
-
+                planeToInteract.transform.position = hits[0].pose.position;
+                //planeToInteract.transform.rotation = hits[0].pose.rotation;
                 planeToInteract.gameObject.SetActive(true);
-                SnackBarText.text = "Casting spells"; //debug lol
+                SnackBarText.text = string.Format("Casting spells"); //debug lol
             }
-
             else
             {
                 planeToInteract.gameObject.SetActive(false);
@@ -1827,7 +1785,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             if (anchor != null)
             {
                 GameObject anchorGO = Instantiate(go, anchor.transform);
-                anchor.gameObject.SetActive(terrain);
+                anchor.gameObject.SetActive(!terrain);
                 anchorGO.transform.parent = anchor.gameObject.transform;
                 _anchorObjects.Add(anchor.gameObject);
                 SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();
