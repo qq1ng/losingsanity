@@ -1,8 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using Google.XR.ARCoreExtensions.Samples.Geospatial;
 using Newtonsoft.Json;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 // Classes for the json deserialization, followes the structure of the json from the server
 public class Place
@@ -57,6 +63,8 @@ public class DataManager : MonoBehaviour
     // our inputs here
 
     public Shader surface_shader;
+    public GameObject simons_debug_thingy;
+    private String debug_string = "";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,9 +99,9 @@ public class DataManager : MonoBehaviour
                 Debug.Log("Error loading Places or Empty");
                 return;
             }
-
+            //m_Text
             // processes the data from the server
-            GeneratePlaces(placesFromServer);
+            GeneratePlacesWithPrimitives(placesFromServer);
             Debug.Log("Loaded data remotely from PlaceIT-Api", this);
         });
     }
@@ -101,7 +109,7 @@ public class DataManager : MonoBehaviour
 
     private void GeneratePlaces(List<Place> placesFromServer)
     {
-        foreach(var place in placesFromServer)
+        foreach (var place in placesFromServer)
         {
             Debug.Log(place.name);
             //GameObject gltfObject = new GameObject();
@@ -112,7 +120,7 @@ public class DataManager : MonoBehaviour
 
             // convert base64Texture from response to Texture2D
             var newGo = Instantiate(demoGameObject);
-            
+
             if (!place.base64texture.Equals(""))
             {
                 byte[] imageData = Convert.FromBase64String(place.base64texture);
@@ -215,7 +223,7 @@ public class DataManager : MonoBehaviour
         newPlace.url = objectURL;
         newPlace.base64texture = "";
         newPlace.base64custom = "";
-        newPlace.customText = customText;
+        newPlace.customText = QuaternionToBase64(rotation);//customText;
         newPlace.locations = new Location[] { newLocation };
         newPlace.autor = newAutor;
 
@@ -283,19 +291,20 @@ public class DataManager : MonoBehaviour
     // here our functions and variants of functions
     private void GeneratePlacesWithPrimitives(List<Place> placesFromServer)
     {
+        output_debug("number of places: " + placesFromServer.Count.ToString());
         foreach (var place in placesFromServer)
         {
-            Debug.Log(place.name);
             // convert base64Texture from response to Texture2D
             Material newMat = new Material(surface_shader);
-            var newGo = Instantiate(GameObject.CreatePrimitive(PrimitiveType.Plane));
+            var newGo = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            newGo.gameObject.transform.localScale = new Vector3((9.0f / 21.0f) * 0.50f, 2.0f, 0.50f);
             newGo.GetComponent<Renderer>().material = newMat;
+            //output_debug(place.id.ToString());
 
             if (!place.base64texture.Equals(""))
             {
                 byte[] imageData = Convert.FromBase64String(place.base64texture);
-
-                Texture2D texture = new Texture2D(1024, 1024);
+                Texture2D texture = new Texture2D(1080, 2400);
                 texture.filterMode = FilterMode.Trilinear;
                 texture.LoadImage(imageData);
                 newGo.GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
@@ -303,15 +312,65 @@ public class DataManager : MonoBehaviour
 
             foreach (var location in place.locations)
             {
-                
-                var newQuaternion = new Quaternion();
+
+                var newQuaternion = place.customText != "" ? Base64ToQuaternion(place.customText) : Quaternion.EulerRotation(0.0f, 90.0f, 0.0f);//new Quaternion();
+                //output_debug("converted customText to quaternion");
+                /*
                 newQuaternion.x = location.rX;
                 newQuaternion.y = location.rY;
                 newQuaternion.z = location.rZ;
                 newQuaternion.w = location.rW;
-                
+                */
+                output_debug(location.lat.ToString());
                 geospatialController.PlaceFixedGeospatialAnchor(new GeospatialAnchorHistory(DateTime.Now, location.lat, location.lng, location.lev, AnchorType.Terrain, newQuaternion), newGo);
             }
+            //newGo.SetActive(false);
+            Destroy(newGo);
         }
+        //TODO: does this cause unexpected behaviour?
+        //we're adding back in the onstartupAnchors we just deleted (too lazy to figure out how to exclude from deletion)
+        geospatialController.AddMyAnchors();
+    }
+
+    // Convert a Quaternion to an Base64String
+    private String QuaternionToBase64(Quaternion q)
+    {
+        if (q == null)
+            return null;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        MemoryStream ms = new MemoryStream();
+        bf.Serialize(ms, q);
+
+        return Convert.ToBase64String(ms.ToArray());
+    }
+
+    // Convert a Base64String to a Quaternion
+    private Quaternion Base64ToQuaternion(String rot_string)
+    {
+        Quaternion q = new Quaternion();
+        //output_debug("created new quaternion");
+        //output_debug("|" + rot_string + "|");
+        rot_string = rot_string.Substring(1, rot_string.Length - 2);
+        //output_debug("cut of the ends of the string");
+        //t.Trim('(', ')');
+        string[] c = rot_string.Split(", ");
+        //output_debug("split values");
+        q.x = float.Parse(c[0], CultureInfo.InvariantCulture.NumberFormat);
+        q.y = float.Parse(c[1], CultureInfo.InvariantCulture.NumberFormat);
+        q.z = float.Parse(c[2], CultureInfo.InvariantCulture.NumberFormat);
+        q.w = float.Parse(c[3], CultureInfo.InvariantCulture.NumberFormat);
+
+
+        Vector3 axis = q * Vector3.up + q * Vector3.back;
+        Quaternion sec_rot = new Quaternion(axis.x, axis.y, axis.z, 0);
+        //output_debug("parsed strings to floats");
+        //output_debug(q.ToString());
+        return sec_rot * q;
+    }
+
+    private void output_debug(String a)
+    {
+        simons_debug_thingy.GetComponent<Text>().text += a + "\n";
     }
 }
