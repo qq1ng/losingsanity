@@ -297,7 +297,7 @@ public class DataManager : MonoBehaviour
             // convert base64Texture from response to Texture2D
             Material newMat = new Material(surface_shader);
             var newGo = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            newGo.gameObject.transform.localScale = new Vector3((9.0f / 21.0f) * 0.25f, 1.0f, 0.25f);
+            newGo.gameObject.transform.localScale = new Vector3((9.0f / 21.0f) * 0.50f, 2.0f, 0.50f);
             newGo.GetComponent<Renderer>().material = newMat;
             //output_debug(place.id.ToString());
 
