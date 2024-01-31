@@ -240,6 +240,14 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         public GameObject BottomBar;
 
+        public GameObject Tutorial;
+
+        public GameObject tutorialFeed;
+
+        public GameObject tutorialMap;
+
+        public GameObject tutorialCamera;
+
 
         //////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////
@@ -386,8 +394,30 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         public void StartScreenClicked ()
         {
             StartScreen.active = false;
-            ARCamera.active = true;
+            Tutorial.active = true;
+            Feed.active = true;
             BottomBar.active = true;
+        }
+
+        public void tutorialFeedClicked ()
+        {
+            tutorialFeed.active = false;
+            Map.active = true;
+            Feed.active = false;
+            tutorialMap.active = true;
+        }
+
+        public void tutorialMapClicked ()
+        {
+            tutorialMap.active = false;
+            ARCamera.active = true;
+            Map.active = false;
+            tutorialCamera.active = true;
+        }
+
+        public void tutorialCameraClicked ()
+        {
+            Tutorial.active = false;
         }
 
         public void ARbuttonClicked ()
