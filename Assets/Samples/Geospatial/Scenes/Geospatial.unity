@@ -2719,8 +2719,8 @@ RectTransform:
   - {fileID: 914283523}
   - {fileID: 1076212145}
   - {fileID: 1818335791}
-  - {fileID: 174977005}
   - {fileID: 1392891498}
+  - {fileID: 174977005}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3214,8 +3214,8 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'This is your AR camera.
 
-    Here you can capture new memories and place
-    them whereever you want.'
+    Here you can capture new memories with the
+    Snap Button and place them with the Place Button.'
 --- !u!222 &765688303
 CanvasRenderer:
   m_ObjectHideFlags: 0
