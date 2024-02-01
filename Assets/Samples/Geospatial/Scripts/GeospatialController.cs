@@ -1814,7 +1814,26 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
             _anchorObjects.Clear();
             _historyCollection.Collection.Clear();
-            DataManager.Instance.RequestPlacesDataFromServer();
+            DataManager.Instance.places_to_create.Clear();
+            StartCoroutine(try_download());
+        }
+
+        public IEnumerator try_download()
+        {
+            SnapButtonGO.active = false;
+            try
+            {
+                DataManager.Instance.RequestPlacesDataFromServer();
+            }
+            catch 
+            {
+                Debug.Log("[O_O] says wtf");
+            }
+            finally
+            {
+                SnapButtonGO.active = true;
+            }
+            return null;
         }
 
         // added by PPG
@@ -1838,7 +1857,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             }
         }
 
-        //simon converter
+        //simons 4 float to quaternion converter
         private Quaternion values_to_quaternion(float x, float y, float z, float w)
         {
             float l = (float)Math.Sqrt(Math.Pow(x, 2.0) + Math.Pow(y, 2.0) + Math.Pow(z, 2.0) + Math.Pow(w, 2.0));

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -65,6 +66,10 @@ public class DataManager : MonoBehaviour
     public Shader surface_shader;
     public GameObject simons_debug_thingy;
     private String debug_string = "";
+    public List<Place> places_to_create = new List<Place>();
+    private float since_last_place;
+    private int last_to_create_count;
+    public GameObject our_plane;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,6 +79,9 @@ public class DataManager : MonoBehaviour
     {
         if (Instance == null)
             Instance = this;
+
+        our_plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        our_plane.active = false;
     }
 
 
@@ -85,6 +93,24 @@ public class DataManager : MonoBehaviour
             SerializeObjectJson();
         }
 #endif
+    }
+
+    private void Update()
+    {
+        if (last_to_create_count == 0 && places_to_create.Count > 0)
+        {
+            since_last_place = 0;
+        }
+        if (places_to_create.Count > 0)
+        {
+            if(since_last_place > 0.1)
+            {
+                place_one_place(places_to_create[places_to_create.Count - 1]);
+                places_to_create.RemoveAt(places_to_create.Count - 1);
+            }
+            since_last_place += Time.deltaTime;
+        }
+        last_to_create_count = places_to_create.Count;
     }
 
 
@@ -99,10 +125,13 @@ public class DataManager : MonoBehaviour
                 Debug.Log("Error loading Places or Empty");
                 return;
             }
-            //m_Text
             // processes the data from the server
-            GeneratePlacesWithPrimitives(placesFromServer);
+
+            //GeneratePlacesWithPrimitives(placesFromServer);
+            places_to_create = placesFromServer;
+
             Debug.Log("Loaded data remotely from PlaceIT-Api", this);
+            Instance.output_debug("Loaded data remotely from PlaceIT-Api");
         });
     }
 
@@ -315,12 +344,12 @@ public class DataManager : MonoBehaviour
 
                 var newQuaternion = place.customText != "" ? Base64ToQuaternion(place.customText) : Quaternion.EulerRotation(0.0f, 90.0f, 0.0f);//new Quaternion();
                 //output_debug("converted customText to quaternion");
-                /*
-                newQuaternion.x = location.rX;
-                newQuaternion.y = location.rY;
-                newQuaternion.z = location.rZ;
-                newQuaternion.w = location.rW;
-                */
+                
+                //newQuaternion.x = location.rX;
+                //newQuaternion.y = location.rY;
+                //newQuaternion.z = location.rZ;
+                //newQuaternion.w = location.rW;
+                
                 output_debug(location.lat.ToString());
                 geospatialController.PlaceFixedGeospatialAnchor(new GeospatialAnchorHistory(DateTime.Now, location.lat, location.lng, location.lev, AnchorType.Terrain, newQuaternion), newGo);
             }
@@ -330,6 +359,43 @@ public class DataManager : MonoBehaviour
         //TODO: does this cause unexpected behaviour?
         //we're adding back in the onstartupAnchors we just deleted (too lazy to figure out how to exclude from deletion)
         geospatialController.AddMyAnchors();
+    }
+
+    private void place_one_place(Place place)
+    {
+        our_plane.active = true;
+        // convert base64Texture from response to Texture2D
+        Material newMat = new Material(surface_shader);
+        //var newGo = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        our_plane.gameObject.transform.localScale = new Vector3((9.0f / 21.0f) * 0.50f, 2.0f, 0.50f);
+        our_plane.GetComponent<Renderer>().material = newMat;
+        //output_debug(place.id.ToString());
+
+        if (!place.base64texture.Equals(""))
+        {
+            byte[] imageData = Convert.FromBase64String(place.base64texture);
+            Texture2D texture = new Texture2D(1080, 2400);
+            texture.filterMode = FilterMode.Trilinear;
+            texture.LoadImage(imageData);
+            our_plane.GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
+        }
+
+        foreach (var location in place.locations)
+        {
+
+            var newQuaternion = place.customText != "" ? Base64ToQuaternion(place.customText) : Quaternion.EulerRotation(0.0f, 90.0f, 0.0f);//new Quaternion();
+                                                                                                                                            //output_debug("converted customText to quaternion");
+
+            //newQuaternion.x = location.rX;
+            //newQuaternion.y = location.rY;
+            //newQuaternion.z = location.rZ;
+            //newQuaternion.w = location.rW;
+
+            output_debug(location.lat.ToString());
+            geospatialController.PlaceFixedGeospatialAnchor(new GeospatialAnchorHistory(DateTime.Now, location.lat, location.lng, location.lev, AnchorType.Terrain, newQuaternion), our_plane);
+        }
+        our_plane.active = false;
+        //Destroy(newGo);
     }
 
     // Convert a Quaternion to an Base64String
@@ -369,7 +435,7 @@ public class DataManager : MonoBehaviour
         return sec_rot * q;
     }
 
-    private void output_debug(String a)
+    public void output_debug(String a)
     {
         simons_debug_thingy.GetComponent<Text>().text += a + "\n";
     }
