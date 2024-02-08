@@ -3140,6 +3140,7 @@ MonoBehaviour:
   debug: 0
   surface_shader: {fileID: 4800000, guid: 5d51b9e228436764fafff1c5d5e32e73, type: 3}
   simons_debug_thingy: {fileID: 1532398842}
+  our_plane: {fileID: 0}
 --- !u!4 &868331527
 Transform:
   m_ObjectHideFlags: 0
@@ -5420,7 +5421,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1532398843
 MonoBehaviour:
   m_ObjectHideFlags: 0

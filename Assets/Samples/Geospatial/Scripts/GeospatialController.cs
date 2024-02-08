@@ -1297,7 +1297,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 DataManager.Instance.AddPlaceToDataBase(RESTApiClient.Instance.GetGroupname(),
                     history.Longitude, history.Latitude, history.Altitude, history.EunRotation,
                     "a beautiful palce in space", "frfr",
-                    planeToAnchorGO.GetComponent<Renderer>().material.mainTexture.ConvertTo<Texture2D>(),
+                    (Texture2D)planeToAnchorGO.GetComponent<Renderer>().material.mainTexture,
                     "", phone_pose.EunRotation.ToString(), "");
             }
         }
