@@ -244,6 +244,11 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         //Download Button UI Component
         public Button DownloadButton;
 
+        //Pressed UI Snack Bar Buttons
+        public GameObject ARButtonPressed;
+        public GameObject FeedButtonPressed;
+        public GameObject MapButtonPressed;
+
         //the material template we apply our textures to after snapping a pic
         public Material planeMaterialTemplate;
 
@@ -425,6 +430,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             StartScreen.active = false;
             Tutorial.active = true;
             Feed.active = true;
+            FeedButtonPressed.active = true;
             BottomBar.active = true;
         }
 
@@ -432,6 +438,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         {
             tutorialFeed.active = false;
             Map.active = true;
+            ARButtonPressed.active = false;
+            MapButtonPressed.active = true;
+            FeedButtonPressed.active = false;
             Feed.active = false;
             tutorialMap.active = true;
         }
@@ -440,6 +449,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         {
             tutorialMap.active = false;
             ARCamera.active = true;
+            ARButtonPressed.active = true;
+            MapButtonPressed.active = false;
+            FeedButtonPressed.active = false;
             Map.active = false;
             tutorialCamera.active = true;
         }
@@ -454,6 +466,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             ARCamera.active = true;
             Feed.active = false;
             Map.active = false;
+            ARButtonPressed.active = true;
+            MapButtonPressed.active = false;
+            FeedButtonPressed.active = false;
         }
 
         public void FeedbuttonClicked ()
@@ -461,6 +476,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             Feed.active = true;
             Map.active = false;
             ARCamera.active = false;
+            ARButtonPressed.active = false;
+            MapButtonPressed.active = false;
+            FeedButtonPressed.active = true;
         }
 
         public void MapbuttonClicked ()
@@ -468,6 +486,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             Map.active = true;
             Feed.active = false;
             ARCamera.active = false;
+            ARButtonPressed.active = false;
+            MapButtonPressed.active = true;
+            FeedButtonPressed.active = false;
         }
         /// <summary>
         /// Callback handling "Get Started" button click event in Privacy Prompt.
