@@ -62,6 +62,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
     using UnityEngine.Android;
     using Unity.VisualScripting;
+    using System.Runtime.CompilerServices;
 #endif
 
     /// <summary>
@@ -205,6 +206,14 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         //////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////
         //below is where we keep our own stuff
+
+        // stores up to the max image planes that will ever be rendered
+        private List<GameObject> renderGOs = new List<GameObject>();
+        public int max_planes = 20;
+        public Shader plane_shader;
+
+        // stores the texture for a corresponding anchor of same index
+        private List<Texture2D> _plane_textures = new List<Texture2D>();
 
         public GameObject simons_debug_thingy;
         private String simons_debug_string="";
@@ -607,6 +616,14 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             {
                 Debug.LogError("Cannot find ARCoreExtensions.");
             }
+
+            for(int i = 0;i< max_planes; i++)
+            {
+                GameObject renderGO = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                renderGO.GetComponent<Renderer>().material = new Material(plane_shader);
+                renderGOs.Add(renderGO);
+                renderGO.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -638,7 +655,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             _isLocalizing = true;
             SnackBarText.text = _localizingMessage;
 
-            LoadGeospatialAnchorHistory();
+            //LoadGeospatialAnchorHistory();
             _shouldResolvingHistory = _historyCollection.Collection.Count > 0;
 
             SwitchToARView(PlayerPrefs.HasKey(_hasDisplayedPrivacyPromptKey));
@@ -687,8 +704,14 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             {
                 Destroy(anchor);
             }
+            foreach(Texture2D tex in _plane_textures)
+            {
+                Destroy(tex);
+            }
 
             _anchorObjects.Clear();
+            _plane_textures.Clear();
+            StopCoroutine("update_renderGOs");
             SaveGeospatialAnchorHistory();
 
             if (StreetscapeGeometryManager)
@@ -1170,6 +1193,38 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             yield break;
         }
 
+        private IEnumerator CheckTerrainPromise(ResolveAnchorOnTerrainPromise promise,
+            GeospatialAnchorHistory history, Texture2D img_tex)
+        {
+            yield return promise;
+
+            var result = promise.Result;
+            if (result.TerrainAnchorState == TerrainAnchorState.Success &&
+                result.Anchor != null)
+            {
+                /*
+                GameObject anchorGO = Instantiate(ownGO,
+                    result.Anchor.gameObject.transform);
+                anchorGO.transform.parent = result.Anchor.gameObject.transform;
+                */
+
+                _anchorObjects.Add(result.Anchor.gameObject);
+                _historyCollection.Collection.Add(history);
+                _plane_textures.Add(img_tex);
+
+                SnackBarText.text = GetDisplayStringForAnchorPlacedSuccess();
+
+                ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
+                SaveGeospatialAnchorHistory();
+            }
+            else
+            {
+                SnackBarText.text = GetDisplayStringForAnchorPlacedFailure();
+            }
+
+            yield break;
+        }
+
         private float GetRooftopAnchorScale(Vector3 anchor, Vector3 camera)
         {
             // Return the scale in range [1, 2] after mapping a distance between camera and anchor
@@ -1292,7 +1347,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
                 SaveGeospatialAnchorHistory();
 
-                // texture upload to database, should update as soon as the photo is placed. TODO: test
+                // texture upload to database, should update as soon as the photo is placed
 
                 DataManager.Instance.AddPlaceToDataBase(RESTApiClient.Instance.GetGroupname(),
                     history.Longitude, history.Latitude, history.Altitude, history.EunRotation,
@@ -1507,6 +1562,46 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             {
                 anchor.gameObject.SetActive(!terrain);
                 planeToAnchorGO.transform.parent = anchor.gameObject.transform;
+                _anchorObjects.Add(anchor.gameObject);
+                SnackBarText.text = string.Format("we're so back"); //debug lol
+            }
+            else
+            {
+                SnackBarText.text = string.Format("it's so over"); //debug lol
+            }
+
+            return anchor;
+        }
+
+        private ARGeospatialAnchor PlaceGeospatialAnchor(
+          GeospatialAnchorHistory history, Texture2D img_tex)
+        {
+            bool terrain = history.AnchorType == AnchorType.Terrain;
+            Quaternion eunRotation = CreateRotation(history);
+            ARGeospatialAnchor anchor = null;
+
+            if (terrain)
+            {
+                // Anchor returned will be null, the coroutine will handle creating the
+                // anchor when the promise is done.
+                ResolveAnchorOnTerrainPromise promise =
+                    AnchorManager.ResolveAnchorOnTerrainAsync(
+                        history.Latitude, history.Longitude,
+                        1.5, eunRotation);
+
+                StartCoroutine(CheckTerrainPromise(promise, history, img_tex));
+                return null;
+            }
+            else
+            {
+                anchor = AnchorManager.AddAnchor(
+                    history.Latitude, history.Longitude, history.Altitude, eunRotation);
+            }
+
+            if (anchor != null)
+            {
+                anchor.gameObject.SetActive(!terrain);
+                _plane_textures.Add(img_tex);
                 _anchorObjects.Add(anchor.gameObject);
                 SnackBarText.text = string.Format("we're so back"); //debug lol
             }
@@ -1811,7 +1906,12 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             {
                 Destroy(anchor);
             }
+            foreach (Texture2D tex in _plane_textures)
+            {
+                Destroy(tex);
+            }
 
+            _plane_textures.Clear();
             _anchorObjects.Clear();
             _historyCollection.Collection.Clear();
             DataManager.Instance.places_to_create.Clear();
@@ -1862,6 +1962,109 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         {
             float l = (float)Math.Sqrt(Math.Pow(x, 2.0) + Math.Pow(y, 2.0) + Math.Pow(z, 2.0) + Math.Pow(w, 2.0));
             return new Quaternion(x / l, y / l, z / l, w / l);
+        }
+
+        // gets put into a list to generate a sorted list of 
+        public struct id_dist_pair
+        {
+            public int id;
+            public float dist;
+
+            public id_dist_pair(int _id, float _dist)
+            {
+                id = _id;
+                dist = _dist;
+            }
+        };
+
+        // returns a list of indeces with corresponding distances to the camera
+        private List<id_dist_pair> check_anchor_distances()
+        {
+            List<id_dist_pair> id_dist_pairs = new List<id_dist_pair>();
+            int cnt = 0;
+            foreach (var anchor in _anchorObjects)
+            {
+                int id = cnt;
+                float dist = Vector3.Magnitude(anchor.transform.position - arCamera.gameObject.transform.position);
+                id_dist_pairs.Add(new id_dist_pair(id, dist));
+                cnt++;
+            }
+            return id_dist_pairs;
+        }
+
+        private class distSorter : IComparer<id_dist_pair>
+        {
+            // Call CaseInsensitiveComparer.Compare with the parameters reversed.
+            int IComparer<id_dist_pair>.Compare(id_dist_pair x, id_dist_pair y)
+            {
+                return ((new CaseInsensitiveComparer()).Compare(x.dist, y.dist));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id_dist_pairs"></param>
+        /// <returns></returns>
+        private List<GameObject> get_top_x_closest_anchors(List<id_dist_pair> id_dist_pairs)
+        {
+            // create list with references to closest Anchor objects
+            List<GameObject> results = new List<GameObject>();
+            //create Comparer object
+            distSorter a = new distSorter();
+            //sort pairs
+            id_dist_pairs.Sort(a);
+            //add the n closest anchors to the to be returned list
+            for(int i = 0; i < Mathf.Min(max_planes,_anchorObjects.Count);i++)
+            {
+                results.Add(_anchorObjects[id_dist_pairs[i].id]);
+            }
+
+            return results;
+        }
+        
+        private void parent_render_objects(List<GameObject> n_closest_anchors)
+        {
+            for(int i = 0; i < max_planes; i++)
+            {
+                if(i < _anchorObjects.Count)
+                {
+                    renderGOs[i].SetActive(true);
+                    renderGOs[i].transform.SetParent(n_closest_anchors[i].transform, false);
+                }
+                else
+                {
+                    renderGOs[i].transform.parent = null;
+                    renderGOs[i].SetActive(false);
+                }
+            }
+        }
+
+        private IEnumerator update_renderGOs()
+        {
+            //call all the parts here
+            List<id_dist_pair> id_dist_pairs = new List<id_dist_pair>();
+            List<GameObject> n_closest_anchors = new List<GameObject>();
+
+            int task_cnt = 1;
+            while(true)
+            {
+                switch (task_cnt)
+                {
+                    case 1:
+                        id_dist_pairs = check_anchor_distances();
+                        break;
+                    case 2:
+                        n_closest_anchors = get_top_x_closest_anchors(id_dist_pairs);
+                        break;
+                    case 3:
+                        parent_render_objects(n_closest_anchors);
+                        task_cnt = 0;
+                        break;
+                }
+                task_cnt++;
+                yield return new WaitForSeconds(0.3f);
+            }
         }
 
         //////////////////////////////////////////////////////////////////////////////
