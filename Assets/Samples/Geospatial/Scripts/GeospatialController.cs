@@ -216,7 +216,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         private List<Texture2D> _plane_textures = new List<Texture2D>();
 
         public GameObject simons_debug_thingy;
-        private String simons_debug_string="";
+        private String simons_debug_string = "";
 
         //our own GameObjects we want to load on startup
         public GameObject Object1;
@@ -230,7 +230,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
 
         //Class-level variable to store the reference to our plane we want to move
-        private GameObject planeToInteract; 
+        private GameObject planeToInteract;
 
         //our camera
         public Camera arCamera;
@@ -429,7 +429,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         private IEnumerator _startLocationService = null;
         private IEnumerator _asyncCheck = null;
 
-        public void StartScreenClicked ()
+        public void StartScreenClicked()
         {
             StartScreen.active = false;
             Tutorial.active = true;
@@ -437,7 +437,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             BottomBar.active = true;
         }
 
-        public void tutorialFeedClicked ()
+        public void tutorialFeedClicked()
         {
             tutorialFeed.active = false;
             Map.active = true;
@@ -445,7 +445,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             tutorialMap.active = true;
         }
 
-        public void tutorialMapClicked ()
+        public void tutorialMapClicked()
         {
             tutorialMap.active = false;
             ARCamera.active = true;
@@ -453,26 +453,26 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             tutorialCamera.active = true;
         }
 
-        public void tutorialCameraClicked ()
+        public void tutorialCameraClicked()
         {
             Tutorial.active = false;
         }
 
-        public void ARbuttonClicked ()
+        public void ARbuttonClicked()
         {
             ARCamera.active = true;
             Feed.active = false;
             Map.active = false;
         }
 
-        public void FeedbuttonClicked ()
+        public void FeedbuttonClicked()
         {
             Feed.active = true;
             Map.active = false;
             ARCamera.active = false;
         }
 
-        public void MapbuttonClicked ()
+        public void MapbuttonClicked()
         {
             Map.active = true;
             Feed.active = false;
@@ -617,7 +617,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 Debug.LogError("Cannot find ARCoreExtensions.");
             }
 
-            for(int i = 0;i< max_planes; i++)
+            for (int i = 0; i < max_planes; i++)
             {
                 GameObject renderGO = GameObject.CreatePrimitive(PrimitiveType.Plane);
                 renderGO.GetComponent<Renderer>().material = new Material(plane_shader);
@@ -704,7 +704,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             {
                 Destroy(anchor);
             }
-            foreach(Texture2D tex in _plane_textures)
+            foreach (Texture2D tex in _plane_textures)
             {
                 Destroy(tex);
             }
@@ -965,10 +965,10 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             }
 
             //own stuff, if raycast bool is true we call this function
-            if(_isRayCasting)
-			{
+            if (_isRayCasting)
+            {
                 ShootRaycast(planeToInteract);
-			}
+            }
 
 
         }
@@ -1772,7 +1772,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             planeToInteract = GameObject.CreatePrimitive(PrimitiveType.Plane);    //solvedTODO: re-activate if all fails (awake) ((reminder))
             MeshRenderer planeRenderer = planeToInteract.GetComponent<MeshRenderer>();
 
-			if (planeRenderer != null)
+            if (planeRenderer != null)
             {
                 // Disable the mesh renderer
                 planeRenderer.enabled = false;
@@ -1884,7 +1884,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         */
 
         private void ChangeStateRaycasting()
-		{
+        {
             Vector2 centerPos = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
 
             PlaceButtonGO.gameObject.SetActive(false);
@@ -1925,7 +1925,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             {
                 DataManager.Instance.RequestPlacesDataFromServer();
             }
-            catch 
+            catch
             {
                 Debug.Log("[O_O] says wtf");
             }
@@ -2015,19 +2015,19 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             //sort pairs
             id_dist_pairs.Sort(a);
             //add the n closest anchors to the to be returned list
-            for(int i = 0; i < Mathf.Min(max_planes,_anchorObjects.Count);i++)
+            for (int i = 0; i < Mathf.Min(max_planes, _anchorObjects.Count); i++)
             {
                 results.Add(_anchorObjects[id_dist_pairs[i].id]);
             }
 
             return results;
         }
-        
+
         private void parent_render_objects(List<GameObject> n_closest_anchors)
         {
-            for(int i = 0; i < max_planes; i++)
+            for (int i = 0; i < max_planes; i++)
             {
-                if(i < _anchorObjects.Count)
+                if (i < _anchorObjects.Count)
                 {
                     renderGOs[i].SetActive(true);
                     renderGOs[i].transform.SetParent(n_closest_anchors[i].transform, false);
@@ -2047,18 +2047,21 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             List<GameObject> n_closest_anchors = new List<GameObject>();
 
             int task_cnt = 1;
-            while(true)
+            while (true)
             {
                 switch (task_cnt)
                 {
                     case 1:
                         id_dist_pairs = check_anchor_distances();
+                        DataManager.Instance.output_debug("checked " + id_dist_pairs.Count.ToString() + " distances");
                         break;
                     case 2:
                         n_closest_anchors = get_top_x_closest_anchors(id_dist_pairs);
+                        DataManager.Instance.output_debug("found " + n_closest_anchors.Count + " closest anchors");
                         break;
                     case 3:
                         parent_render_objects(n_closest_anchors);
+                        DataManager.Instance.output_debug("updated renderGOs");
                         task_cnt = 0;
                         break;
                 }
@@ -2372,7 +2375,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         /// Generates the placed anchor failure string for the UI display.
         /// </summary>
         /// <returns> The string for the UI display for a failed anchor placement.</returns>
-         private string GetDisplayStringForAnchorPlacedFailure()
+        private string GetDisplayStringForAnchorPlacedFailure()
         {
             return string.Format(
                     "Failed to set a {0} anchor!", _anchorType);
