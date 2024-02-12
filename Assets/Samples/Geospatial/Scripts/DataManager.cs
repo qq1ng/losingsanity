@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Google.XR.ARCoreExtensions;
 using Google.XR.ARCoreExtensions.Samples.Geospatial;
 using Newtonsoft.Json;
 using Unity.Mathematics;
@@ -70,6 +71,7 @@ public class DataManager : MonoBehaviour
     private float since_last_place;
     private int last_to_create_count;
     public GameObject our_plane;
+    private int debug_line_cnt = 0;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -361,6 +363,42 @@ public class DataManager : MonoBehaviour
         geospatialController.AddMyAnchors();
     }
 
+    private void GenerateAnchors(List<Place> placesFromServer)
+    {
+        output_debug("number of places: " + placesFromServer.Count.ToString());
+        foreach (var place in placesFromServer)
+        {
+
+            Texture2D texture = new Texture2D(1080, 2400);
+
+            if (!place.base64texture.Equals(""))
+            {
+                byte[] imageData = Convert.FromBase64String(place.base64texture);
+                texture.filterMode = FilterMode.Trilinear;
+                texture.LoadImage(imageData);
+            }
+
+            foreach (var location in place.locations)
+            {
+
+                var newQuaternion = place.customText != "" ? Base64ToQuaternion(place.customText) : Quaternion.EulerRotation(0.0f, 90.0f, 0.0f);//new Quaternion();
+                                               
+                //newQuaternion.x = location.rX;
+                //newQuaternion.y = location.rY;
+                //newQuaternion.z = location.rZ;
+                //newQuaternion.w = location.rW;
+
+                output_debug(location.lat.ToString());
+                GeospatialAnchorHistory hist = new GeospatialAnchorHistory(DateTime.Now, location.lat, location.lng, location.lev, AnchorType.Terrain, newQuaternion);
+                ARGeospatialAnchor anchor = GeospatialController.PlaceGeospatialAnchor(hist, texture);
+            }
+            //newGo.SetActive(false);
+        }
+        //TODO: does this cause unexpected behaviour?
+        //we're adding back in the onstartupAnchors we just deleted (too lazy to figure out how to exclude from deletion)
+        geospatialController.AddMyAnchors();
+    }
+
     private void place_one_place(Place place)
     {
         our_plane.active = true;
@@ -437,6 +475,12 @@ public class DataManager : MonoBehaviour
 
     public void output_debug(String a)
     {
+        if(debug_line_cnt > 30)
+        {
+            debug_line_cnt = 0;
+            simons_debug_thingy.GetComponent<Text>().text = "";
+        }
         simons_debug_thingy.GetComponent<Text>().text += a + "\n";
+        debug_line_cnt++;
     }
 }

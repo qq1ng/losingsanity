@@ -217,6 +217,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         public GameObject simons_debug_thingy;
         private String simons_debug_string = "";
+        private IEnumerator update_renderGOs_coroutine;
 
         //our own GameObjects we want to load on startup
         public GameObject Object1;
@@ -711,7 +712,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
             _anchorObjects.Clear();
             _plane_textures.Clear();
-            StopCoroutine("update_renderGOs");
+            StopCoroutine(update_renderGOs_coroutine);
             SaveGeospatialAnchorHistory();
 
             if (StreetscapeGeometryManager)
@@ -871,7 +872,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 if (_firstTime)
                 {
                     //own stuff for startup anchors
-                    AddMyAnchors();
+                    //AddMyAnchors();
                     _firstTime = false;
                 }
 
@@ -879,6 +880,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 {
                     go.SetActive(true);
                 }
+
+                update_renderGOs_coroutine = update_renderGOs();
+                StartCoroutine(update_renderGOs_coroutine);
 
                 ResolveHistory();
             }
@@ -1338,12 +1342,13 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                     _anchorType);
 
 
-                var anchor = PlaceGeospatialAnchor(history, planeToAnchorGO);
+                var anchor = PlaceGeospatialAnchor(history, capturedTexture);
+                /*
                 if (anchor != null)
                 {
                     _historyCollection.Collection.Add(history);
                 }
-
+                */
                 ClearAllButton.gameObject.SetActive(_anchorObjects.Count > 0);
                 SaveGeospatialAnchorHistory();
 
@@ -1351,7 +1356,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
                 DataManager.Instance.AddPlaceToDataBase(RESTApiClient.Instance.GetGroupname(),
                     history.Longitude, history.Latitude, history.Altitude, history.EunRotation,
-                    "a beautiful palce in space", "frfr",
+                    "a beautiful place in space", "now like frfr",
                     (Texture2D)planeToAnchorGO.GetComponent<Renderer>().material.mainTexture,
                     "", phone_pose.EunRotation.ToString(), "");
             }
@@ -1573,7 +1578,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             return anchor;
         }
 
-        private ARGeospatialAnchor PlaceGeospatialAnchor(
+        public ARGeospatialAnchor PlaceGeospatialAnchor(
           GeospatialAnchorHistory history, Texture2D img_tex)
         {
             bool terrain = history.AnchorType == AnchorType.Terrain;
@@ -1896,7 +1901,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             _isRayCasting = false;
             //SnackBarText.text = string.Format("Finished casting spells"); //debug lol TODO:re-enable after anchor conversion is figured out
 
-            planeToInteract.gameObject.SetActive(true);    //TODO: enable or disable blablasave
+            planeToInteract.gameObject.SetActive(false);    //TODO: enable or disable blablasave
         }
 
         // delete all anchors and the anchorhistory, then download and anchor everything down, eh eeeEEEEEEEEEEHHHH? :D
@@ -2019,7 +2024,6 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             {
                 results.Add(_anchorObjects[id_dist_pairs[i].id]);
             }
-
             return results;
         }
 
@@ -2042,6 +2046,9 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         private IEnumerator update_renderGOs()
         {
+
+            DataManager.Instance.output_debug("entered update_renderGOs");
+
             //call all the parts here
             List<id_dist_pair> id_dist_pairs = new List<id_dist_pair>();
             List<GameObject> n_closest_anchors = new List<GameObject>();
@@ -2053,15 +2060,13 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                 {
                     case 1:
                         id_dist_pairs = check_anchor_distances();
-                        DataManager.Instance.output_debug("checked " + id_dist_pairs.Count.ToString() + " distances");
                         break;
                     case 2:
                         n_closest_anchors = get_top_x_closest_anchors(id_dist_pairs);
-                        DataManager.Instance.output_debug("found " + n_closest_anchors.Count + " closest anchors");
                         break;
                     case 3:
                         parent_render_objects(n_closest_anchors);
-                        DataManager.Instance.output_debug("updated renderGOs");
+                        DataManager.Instance.output_debug("stored textures: " + _plane_textures.Count + " stored anchors: " + _historyCollection.Collection.Count + " rendered anchors: " + n_closest_anchors.Count);
                         task_cnt = 0;
                         break;
                 }
