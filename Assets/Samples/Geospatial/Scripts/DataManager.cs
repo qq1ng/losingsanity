@@ -71,7 +71,6 @@ public class DataManager : MonoBehaviour
     private float since_last_place;
     private int last_to_create_count;
     public GameObject our_plane;
-    private int debug_line_cnt = 0;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +129,8 @@ public class DataManager : MonoBehaviour
             // processes the data from the server
 
             //GeneratePlacesWithPrimitives(placesFromServer);
-            places_to_create = placesFromServer;
+            //places_to_create = placesFromServer;
+            GenerateAnchors(placesFromServer);
 
             Debug.Log("Loaded data remotely from PlaceIT-Api", this);
             Instance.output_debug("Loaded data remotely from PlaceIT-Api");
@@ -390,13 +390,13 @@ public class DataManager : MonoBehaviour
 
                 output_debug(location.lat.ToString());
                 GeospatialAnchorHistory hist = new GeospatialAnchorHistory(DateTime.Now, location.lat, location.lng, location.lev, AnchorType.Terrain, newQuaternion);
-                ARGeospatialAnchor anchor = GeospatialController.PlaceGeospatialAnchor(hist, texture);
+                geospatialController.PlaceGeospatialAnchor(hist, texture);
             }
             //newGo.SetActive(false);
         }
         //TODO: does this cause unexpected behaviour?
         //we're adding back in the onstartupAnchors we just deleted (too lazy to figure out how to exclude from deletion)
-        geospatialController.AddMyAnchors();
+        //geospatialController.AddMyAnchors();
     }
 
     private void place_one_place(Place place)
@@ -475,12 +475,6 @@ public class DataManager : MonoBehaviour
 
     public void output_debug(String a)
     {
-        if(debug_line_cnt > 30)
-        {
-            debug_line_cnt = 0;
-            simons_debug_thingy.GetComponent<Text>().text = "";
-        }
         simons_debug_thingy.GetComponent<Text>().text += a + "\n";
-        debug_line_cnt++;
     }
 }

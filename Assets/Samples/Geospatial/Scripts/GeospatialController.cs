@@ -656,7 +656,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             _isLocalizing = true;
             SnackBarText.text = _localizingMessage;
 
-            //LoadGeospatialAnchorHistory();
+            LoadGeospatialAnchorHistory();
             _shouldResolvingHistory = _historyCollection.Collection.Count > 0;
 
             SwitchToARView(PlayerPrefs.HasKey(_hasDisplayedPrivacyPromptKey));
@@ -1925,7 +1925,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         public IEnumerator try_download()
         {
-            SnapButtonGO.active = false;
+            SnapButtonGO.SetActive(false);
             try
             {
                 DataManager.Instance.RequestPlacesDataFromServer();
@@ -1936,7 +1936,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             }
             finally
             {
-                SnapButtonGO.active = true;
+                SnapButtonGO.SetActive(true);
             }
             return null;
         }
@@ -2018,9 +2018,12 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
             //create Comparer object
             distSorter a = new distSorter();
             //sort pairs
-            id_dist_pairs.Sort(a);
+            if(id_dist_pairs.Count > 1)
+            {
+                id_dist_pairs.Sort(a);
+            }
             //add the n closest anchors to the to be returned list
-            for (int i = 0; i < Mathf.Min(max_planes, _anchorObjects.Count); i++)
+            for (int i = 0; i < Mathf.Min(max_planes, id_dist_pairs.Count); i++)
             {
                 results.Add(_anchorObjects[id_dist_pairs[i].id]);
             }
@@ -2031,7 +2034,7 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
         {
             for (int i = 0; i < max_planes; i++)
             {
-                if (i < _anchorObjects.Count)
+                if (i < n_closest_anchors.Count)
                 {
                     renderGOs[i].SetActive(true);
                     renderGOs[i].transform.SetParent(n_closest_anchors[i].transform, false);
@@ -2046,10 +2049,6 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
 
         private IEnumerator update_renderGOs()
         {
-
-            DataManager.Instance.output_debug("entered update_renderGOs");
-
-            //call all the parts here
             List<id_dist_pair> id_dist_pairs = new List<id_dist_pair>();
             List<GameObject> n_closest_anchors = new List<GameObject>();
 
@@ -2066,7 +2065,6 @@ namespace Google.XR.ARCoreExtensions.Samples.Geospatial
                         break;
                     case 3:
                         parent_render_objects(n_closest_anchors);
-                        DataManager.Instance.output_debug("stored textures: " + _plane_textures.Count + " stored anchors: " + _historyCollection.Collection.Count + " rendered anchors: " + n_closest_anchors.Count);
                         task_cnt = 0;
                         break;
                 }
